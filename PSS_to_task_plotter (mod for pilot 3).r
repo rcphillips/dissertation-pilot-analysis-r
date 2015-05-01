@@ -1,6 +1,6 @@
 ###Personal Significance -> task plotter
 #R.Phillips
-#12/3/14
+#12/4/14
 
 #Bring in the PSS data for one subject
 #generate new groups based on quartile split.
