@@ -10,16 +10,17 @@
 #Set working directory to flash drive (on CNS Mac))
 #setwd("/Volumes/NEW VOLUME/r/analyses (in r)/AX_RT_analysis")
 #Set working directory to flash drive (on IRC PC)
-setwd("F:/r/analyses (in r)/AX_RT_analysis")
+#setwd("F:/r/analyses (in r)/AX_RT_analysis")
 #Set working directory to flash drive (on laptop)
 #setwd("H:/r/analyses (in r)/AX_RT_analysis")
-
+#Set working directory to box sync! Does this work? (from CNS)
+setwd("~/Box Sync/SRP_AXCPT_pilot_data")
 ###
 #TRIAL TYPE SELECTION
-trial_type_of_interest <- "BX"
+trial_type_of_interest <- "AX"
 
 ###
-
+i=6
 #subject counter start (for JUST pss, not cbind with task)
 allsubj_personal<-data.frame(NULL)
 allsubj_high_tau<-data.frame(NULL)
@@ -139,7 +140,7 @@ plot_title<-paste(trial_type_of_interest,"probe RT with median PSR split", ' ')
 ggplot(allsubj_personal, aes(x=subj_RT)) + 
   geom_density(fill="white", colour="black", binwidth=30) +
   xlim(-1,2000) +
-  xlab("AX Probe RT")+
+  xlab(paste(trial_type_of_interest,"Probe RT", ' '))+
   ylim(-.001,.005) +
   ylab("Probability Density")+
   ggtitle(plot_title) +
