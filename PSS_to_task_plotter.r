@@ -35,8 +35,7 @@ for  (i in c(6,7,9,10,11,13,15,16,17,18,19,20,22)){
   subjdigit<-subjpss$Subject[1] #subjno
   savefilename<-paste("subj", subjdigit, sep="", "_personal_ratings")
   assign(savefilename, clean_subj_pss)
-  
-  
+    
   ###
   #Sort the two lists alphabetically, and then just apply the PSS scores to the task scores.
   sorted_pss<-clean_subj_pss[order(word),]

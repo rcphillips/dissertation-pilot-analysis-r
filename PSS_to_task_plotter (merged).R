@@ -16,7 +16,7 @@ setwd("F:/r/analyses (in r)/AX_RT_analysis")
 
 ###
 #TRIAL TYPE SELECTION
-trial_type_of_interest <- "BX"
+trial_type_of_interest <- "AX"
 
 ###
 
@@ -28,7 +28,7 @@ allsubj_num<-data.frame(subjnum=c(23:32))
 allsubj_full_lapse<-data.frame(NULL)
 allsubj_partial_lapse<-data.frame(NULL)
 #extract the dta for all subjects
-for  (i in c(6,7,9,10,11,13,15,16,17,18,19,20,22:32)){
+for  (i in c(6,7,9,10,11,13,15,16,17,18,19,20,22,24:32)){
   subjpss_name<- paste("subj", i, sep="","_pss.csv")
   subjpss<-read.csv(subjpss_name,stringsAsFactors=FALSE)
   #load and name the csv for RTs
