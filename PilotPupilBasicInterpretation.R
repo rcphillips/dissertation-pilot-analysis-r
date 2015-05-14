@@ -1,0 +1,7 @@
+subjdata<-read.csv("101_subset.csv")
+head(subjdata)
+colnames(subjdata)<-c("sampleno","notsure1","notsure2pupil","notsure3","constant")
+colnames(subjdata)
+plot(as.numeric(subjdata$notsure1), xlim=c(1000,13000))
+plot(as.numeric(subjdata$notsure2))
+plot(as.numeric(subjdata$notsure3))
