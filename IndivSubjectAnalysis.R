@@ -24,6 +24,7 @@ setwd("C:/Users/rphillips/Box Sync/SRP_AXCPT_pilot_data")
 allsubjdata<-data.frame(NULL)
 ###actual code begins
 #extract the data for all subjects
+i=17
 for  (i in c(6,7,9,10,11,13,15,16,17,18,19,20,22)){
 #Read csv
 subjpss_name<- paste("subj", i, sep="","_pss.csv")
