@@ -38,8 +38,16 @@ subjdata<-subset(subjdata, subjdata$Cue.ACC=="1" & subjdata$Probe.ACC=="1")
 subjdata[length(subjdata)+1]<-i # give a group variable
 allsubjdata<-rbind(allsubjdata,subjdata) #join with data from previous loops
 }#end group processing
+colnames(allsubjdata)[length(allsubjdata)]<-"subjno"
 #plot RT on x axis
 #plot count on y axis
 hist(subjdata$Probe.RT, breaks = 100, ylim=c(0,5))
-#plot divided by sig
+
+install.packages("ggplot2")
+library(ggplot2)
+install.packages("RColorBrewer")
+library(RColorBrewer)
+p<-ggplot(allsubjdata, aes(x=Probe.RT, color=as.factor(subjno)))+
+         geom_density(position="identity",alpha=0.6)
+p
 
