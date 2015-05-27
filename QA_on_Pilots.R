@@ -17,10 +17,12 @@ allsubj_final_cues_in_min_minus_sum<-data.frame(blankcol=c(1:6))
 #subtract beginning time from end time
 ###Actual Code Begins:
 #loadcsv
-i=23
+i=16
+j=1
 for  (i in c(6,7,9,10,11,13,15,16,17,18,19,20,22,23,24,25,26,27,28,29,30,31,32)){
 subjdata_name<- paste("subj", i, sep="","_task.csv")
 subjdata<-read.csv(subjdata_name,stringsAsFactors=FALSE)
+subjdata<-subset(subjdata, subjdata$TrialType=="AX")
 #find the final item in each block
 for (j in 1:6){
 last_trial_in_block[j]<-as.numeric(which(subjdata$BlockNum==j)[length(which(subjdata$BlockNum==j))])
@@ -43,11 +45,10 @@ which(allsubj_final_cues_in_min_minus_sum=="")
 #ah, but block 2 is 21 mins.... OHH I'm a doof. the blocks are added
 #also need to make sure the optseq magic works out
 table(subjdata$Subject, subjdata$BlockNum)
-
-
-
+###When are Lapses Occuring within a block?
 #group it by block
-
+plot(subjdata$Probe.ACC,col=i)+abline(v=last_trial_in_block[,1])
+### 
 #subtract beginning time from end time
 #####
 #going directly to the optseq files
