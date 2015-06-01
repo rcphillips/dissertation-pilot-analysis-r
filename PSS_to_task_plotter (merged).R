@@ -20,7 +20,7 @@ setwd("~/Box Sync/SRP_AXCPT_pilot_data")
 trial_type_of_interest <- "AX"
 
 ###
-i=6
+i=33
 #subject counter start (for JUST pss, not cbind with task)
 allsubj_personal<-data.frame(NULL)
 allsubj_high_tau<-data.frame(NULL)
@@ -40,7 +40,7 @@ for  (i in c(6,7,9,10,11,13,15,16,17,18,19,20,22,24:32)){
   subjdata<-subset(subjdata, subjdata$Cue.ACC=="1" & subjdata$Probe.ACC=="1")
 #####Side analyses
   #fun way of looking at which trials they got right and wrong!
-  table(subjdata$TrialType[which(subjdata$Probe.ACC=="0")])
+  table(subjdata$DisplayStr[which(subjdata$Probe.ACC=="0")])
   #note, have to do this before removing incorr trials
   ###
   #colors(1:20)
@@ -150,5 +150,5 @@ ggplot(allsubj_personal, aes(x=subj_RT)) +
   facet_grid(group ~ .)
 
 #word extractor!
-#subj24_personal_ratings$word[which(subj24_personal_salience$subj_RT>300)]
+subjtask_and_pss$subj_pss_word[which(subjtask_and_pss$subj_pss_score>5)]
 
