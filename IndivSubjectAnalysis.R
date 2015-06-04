@@ -17,7 +17,7 @@
 ###housekeeping- setting working directory, initializing variables
 #setwd:
 #for IRC comp
-#setwd("C:/Users/rphillips/Box Sync/SRP_AXCPT_pilot_data")
+setwd("C:/Users/rphillips/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
 #for CNS comp
 #setwd("~/Box Sync/SRP_AXCPT_pilot_data")
 #for home comp
