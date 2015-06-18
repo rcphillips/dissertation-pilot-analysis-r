@@ -21,7 +21,7 @@ setwd("C:/Users/rphillips/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
 #for CNS comp
 #setwd("~/Box Sync/SRP_AXCPT_pilot_data")
 #for home comp
-setwd("E:/Box Sync/Box Sync/SRP_AXCPT_pilot_data")
+#setwd("E:/Box Sync/Box Sync/SRP_AXCPT_pilot_data")
 install.packages("ggplot2")
 install.packages("RColorBrewer")
 library(ggplot2)
@@ -32,7 +32,7 @@ allsubjdata<-data.frame(NULL)
 trial_type_of_interest <- "AX"
 ###actual code begins
 #extract the data for all subjects
-i=33
+i=34
 for  (i in c(6,7,10,11,15, 16,17,19,20,22,24,25,26,27,28,30,31,32)){
   #29 needs to be dropped because not all blocks were correctly encoded
 #Read csv
@@ -128,7 +128,7 @@ hist(subjdata$Probe.RT, breaks = 100, ylim=c(0,5))
 
 ###PSR plotting
 #The goal here is to produce a histogram simply indicating where their responses were
-table(subjpss$score)
+hist(table(subjpss$score))
 
 indiv_subj_plot_psr<-ggplot(subjpss, aes(x=score)) +
   geom_histogram(binwidth=1) + 
