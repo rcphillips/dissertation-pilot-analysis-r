@@ -20,7 +20,11 @@ setwd("~/Box Sync/SRP_AXCPT_pilot_data")
 trial_type_of_interest <- "AX"
 
 ###
+<<<<<<< HEAD
 i=33
+=======
+i=3 
+>>>>>>> 2c7fd4a0de2df06e3b530bc9979b73beae7ff84d
 #subject counter start (for JUST pss, not cbind with task)
 allsubj_personal<-data.frame(NULL)
 allsubj_high_tau<-data.frame(NULL)
@@ -150,5 +154,5 @@ ggplot(allsubj_personal, aes(x=subj_RT)) +
   facet_grid(group ~ .)
 
 #word extractor!
-#subj24_personal_ratings$word[which(subj24_personal_salience$subj_RT>300)]
+subjtask_and_pss$subj_pss_word[which(subjtask_and_pss$subj_pss_score>5)]
 
