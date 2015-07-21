@@ -4,9 +4,9 @@
 #The goal here is to extract the total time per block from a single subject in the course of the TASK.
 ###Initializing Variables/Startup:
 #from IRC I think:
-setwd("C:/Users/rphillips/Box Sync/SRP_AXCPT_pilot_data")
+#setwd("C:/Users/rphillips/Box Sync/SRP_AXCPT_pilot_data")
 #from home comp:
-#setwd("C:/Users/ryphil/Box Sync/SRP_AXCPT_pilot_data")
+setwd("E:/Box Sync/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
 last_trial_in_block<-matrix(nrow=6,ncol=1)
 final_cues_in_min_minus_sum<-matrix(nrow=6,ncol=1)
 allsubj_final_cues_in_min_minus_sum<-data.frame(blankcol=c(1:6))
@@ -17,8 +17,12 @@ allsubj_final_cues_in_min_minus_sum<-data.frame(blankcol=c(1:6))
 #subtract beginning time from end time
 ###Actual Code Begins:
 #loadcsv
+<<<<<<< HEAD
+i=33
+=======
 i=34
 j=1
+>>>>>>> 2c7fd4a0de2df06e3b530bc9979b73beae7ff84d
 for  (i in c(6,7,9,10,11,13,15,16,17,18,19,20,22,23,24,25,26,27,28,29,30,31,32)){
 subjdata_name<- paste("subj", i, sep="","_task.csv")
 subjdata<-read.csv(subjdata_name,stringsAsFactors=FALSE)
