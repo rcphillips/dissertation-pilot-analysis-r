@@ -17,16 +17,11 @@
 ###housekeeping- setting working directory, initializing variables
 #setwd:
 #for IRC comp
-setwd("C:/Users/rphillips/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
+#setwd("C:/Users/rphillips/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
 #for CNS comp
-#setwd("~/Box Sync/SRP_AXCPT_pilot_data")
-<<<<<<< HEAD
-#from home comp:
-setwd("E:/Box Sync/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
-=======
+setwd("~/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
 #for home comp
-#setwd("E:/Box Sync/Box Sync/SRP_AXCPT_pilot_data")
->>>>>>> 2c7fd4a0de2df06e3b530bc9979b73beae7ff84d
+#setwd("E:/Box Sync/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
 install.packages("ggplot2")
 install.packages("RColorBrewer")
 library(ggplot2)
@@ -37,11 +32,7 @@ allsubjdata<-data.frame(NULL)
 trial_type_of_interest <- "AX"
 ###actual code begins
 #extract the data for all subjects
-<<<<<<< HEAD
 i=33
-=======
-i=34
->>>>>>> 2c7fd4a0de2df06e3b530bc9979b73beae7ff84d
 for  (i in c(6,7,10,11,15, 16,17,19,20,22,24,25,26,27,28,30,31,32)){
   #29 needs to be dropped because not all blocks were correctly encoded
 #Read csv
@@ -52,7 +43,7 @@ for  (i in c(6,7,10,11,15, 16,17,19,20,22,24,25,26,27,28,30,31,32)){
   subjdata<-read.csv(subjdata_name,stringsAsFactors=FALSE)
 #Remove inaccurate trials from the subjdata. This part of the task is just concerned with
 #correct trials/partial lapses. Incorrect trials are dealt with elsewhere.
-  subjdata<-subset(subjdata, subjdata$Cue.ACC=="1" & subjdata$Probe.ACC=="0")
+  subjdata<-subset(subjdata, subjdata$Cue.ACC=="1" & subjdata$Probe.ACC=="1")
   subjdata<-subset(subjdata, select = c(Probe.RT, DisplayStr, TrialType))# can add more later
 #bring all subjects into same data frame
   subjdata[length(subjdata)+1]<-i # give a group variable
@@ -119,16 +110,15 @@ subjtask_and_pss<-subset(subjtask_and_pss, subj_trialtype==trial_type_of_interes
 #the next thing is to classify the scores as high or low
 subjtask_and_pss$SRPclass<-c(1:length(subjtask_and_pss$subj_pss_word)) #initializing
 for (k in 1:length(subjtask_and_pss$subj_pss_word)){ 
-  if ((subjtask_and_pss$subj_pss_score[k]>=3.1)=="TRUE"){subjtask_and_pss$SRPclass[k]='high'}
-  if ((subjtask_and_pss$subj_pss_score[k]<3)=="TRUE") {subjtask_and_pss$SRPclass[k]='low'}
+  if ((subjtask_and_pss$subj_pss_score[k]>=6)=="TRUE"){subjtask_and_pss$SRPclass[k]='high'}
+  if ((subjtask_and_pss$subj_pss_score[k]<5)=="TRUE") {subjtask_and_pss$SRPclass[k]='low'}
 }
-indiv_subj_plot <- ggplot(subjtask_and_pss, aes(x=subj_RT, colour=SRPclass)) + 
+indiv_subj_plot <- ggplot(subjtask_and_pss, aes(x=subj_RT)) + 
   geom_histogram(binwidth=10) + 
   ggtitle(paste("subj", i, sep="","_plot")) +
-  scale_x_continuous(limits=c(0,2000))
-  #scale_y_continuous(limits=c(0,500))
+  scale_x_continuous(limits=c(0,2000))+
+  scale_y_continuous(limits=c(0,5))
 indiv_subj_plot
-hist(subjpss$score)
 assign(paste("subj", i, sep="","_plot"),indiv_subj_plot)
 }#end group processing
 colnames(allsubjdata)[length(allsubjdata)]<-"subjno"
@@ -146,7 +136,7 @@ indiv_subj_plot_psr<-ggplot(subjpss, aes(x=score)) +
   scale_x_continuous(limits=c(-1,8))
 indiv_subj_plot_psr
 
-p<-ggplot(subjtask_and_pss, aes(x=Probe.RT, color=SRPclass))+
+p<-ggplot(allsubjdata, aes(x=Probe.RT, color=as.factor(subjno)))+
          geom_density(position="identity",alpha=0.6)
 p
 
