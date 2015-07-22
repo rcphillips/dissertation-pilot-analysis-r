@@ -50,8 +50,8 @@ subjdata$seg_marker1b <- subjdata$Probe.RT
 ###^_^ So this is how you set up a spline
 ###^_^ You define your inflection point
 ###^_^ And you split it up
-subjdata$seg_marker1a[which(subjdata$seg_marker1a > mean(subjdata$seg_marker))] <- 0
-subjdata$seg_marker1b[which(subjdata$seg_marker1a <= mean(subjdata$seg_marker))] <- 0
+subjdata$seg_marker1a[which(subjdata$seg_marker1a > mean(subjdata$Probe.RT))] <- 0
+subjdata$seg_marker1b[which(subjdata$seg_marker1a >0)] <- 0
 
 
 m2s1 <- lm(Probe.RT ~ seg_marker1a + seg_marker1b, data = subjdata)
