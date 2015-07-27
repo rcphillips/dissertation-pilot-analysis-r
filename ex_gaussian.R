@@ -1,65 +1,138 @@
 #ex-gaussian modelling for SRP-AXCPT
 #R. Phillips
 #150716
-#The goal here is to model subjects RTs, and then fit that to a split linear model,
-#starting with a gaussian compenent and then shifting to a negative exponential component.
+#The goal here is to classify partial lapses using the Heathcote method as put forth by Fassbender,
+#and as implemented by the retimes package
 ###Steps:
 #Bring in a single subject's RT distribution
-#visualize
-#Model a gaussian component
-#visuzalize
-#Model a gaussian component and a negative exponential component
-#iteratively pick the best split point for the data
-#split the data by SRP, and repeat this process for both parts
+
+#Bring in a single subject's PSR info
+
+#split the data by SRP
+
+#apply the timefit method to each class of SRP
+
+#save the tau values from each of those timefits
+
+#apply tau cutoff for each class of SRP
+
+#quantify  partial lapses for each class of SRP
+
 #repeat for all subjects
+
 ###
 ###Housekeeping:
 #IRC
 setwd("C:/Users/rphillips/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
 library(ggplot2)
+install.packages('retimes')
+library(retimes)
 ###
+partial_lapses<-function(subjno){
 #Bring in a single subject's RT distribution
-subjdata<-read.csv('subj39_task.csv')
-#removing incorrect trials
-subjdata<-subset(subjdata, subjdata$Cue.ACC=="1" & subjdata$Probe.ACC=="1" & subjdata$TrialType=="AX") 
-##visualize
-#first, produce a histogram
-plot_title<-c("Probe RT")
-plot<-ggplot(subjdata, aes(x=Probe.RT)) + 
-  geom_histogram(fill="white", colour="black", binwidth=30) +
-  #xlim(-1,2000) +
-  xlab("Probe RT")+
-  #ylim(-.001,100) +
-  ylab("Count")+
-  ggtitle(plot_title) +
-  theme(strip.text.y=element_text(size=30), axis.title=element_text(size=30), 
-        plot.title=element_text(size=30))
-#next, extract the histogram counts from it
-hist_counts<-ggplot_build(plot)
-xvar<-as.numeric(unlist(hist_counts$data[[1]][11]))
-xvar<-(xvar-mean(xvar))#centering data
-yvar<-as.numeric(unlist(hist_counts$data[[1]][2]))
-yvar<-(yvar-mean(yvar))#centering data
-#then, remodel it:
-plot(x=xvar,y=yvar)
-#Model a gaussian component
-###So this is from that stats class, needs to be modified
-#Create segments of x1 for model
-subjdata$seg_marker1a <- subjdata$Probe.RT
-subjdata$seg_marker1b <- subjdata$Probe.RT
-###^_^ So this is how you set up a spline
-###^_^ You define your inflection point
-###^_^ And you split it up
-subjdata$seg_marker1a[which(subjdata$seg_marker1a > mean(subjdata$Probe.RT))] <- 0
-subjdata$seg_marker1b[which(subjdata$seg_marker1a >0)] <- 0
+subjdata_name<- paste("subj", subjno, sep="","_task.csv")
+subjdata<-read.csv(subjdata_name,stringsAsFactors=FALSE)
+#remove incorrect trials
+subjdata<-subset(subjdata, subjdata$Cue.ACC=="1" & subjdata$Probe.ACC=="1")
+#Bring in a single subject's PSR info
+subjpss_name<- paste("subj", subjno, sep="","_pss.csv")
+subjpss<-read.csv(subjpss_name,stringsAsFactors=FALSE)
+#split the data by SRP
+if (subjno %in% c(6,7,9,10,11,13,15,16,17,18,19,20,22)==TRUE){
+  #9, 13, 16, 18 #removed for low AX accuracy, low BX accuracy
+  #This group is for an early version of the pss script.
+  #removed unused columns
+  subjpss<-subset(subjpss, select = c(Subject, Block, Word.Trial., WordPresentation.RESP, WordPresentation.RT, WordPresentation1.RESP, WordPresentation1.RT, WordPresentation2.RESP, WordPresentation2.RT, WordPresentation3.RESP, WordPresentation3.RT, WordPresentation4.RESP, WordPresentation4.RT, WordPresentation5.RESP, WordPresentation5.RT))
+  #match each PSSword with its PSSscore
+  j=1
+  reaction_time<-matrix(nrow = 306, ncol=1)
+  score<-matrix(nrow = 306, ncol=1)
+  word<-matrix(nrow = 306, ncol=1)
+  for (j in 1:306) {
+    reaction_time[j]<-max(subjpss[j,4:15], na.rm=TRUE) #a somewhat strange way of getting RTs 
+    score[j]<-min(subjpss[j,4:15], na.rm=TRUE)
+    word[j]<-as.character(subjpss$Word.Trial.[j])
+  }
+  clean_subj_pss<-data.frame(word,score,reaction_time)
+}
+else
+{
+  subjpss<-subset(subjpss, select = c(Subject, Block, Word, WordPresentation.RESP,WordPresentation.RT))
+  #match each PSSword with its PSSscore
+  j=10
+  reaction_time<-matrix(nrow = 306, ncol=1)
+  score<-matrix(nrow = 306, ncol=1)
+  word<-matrix(nrow = 306, ncol=1)
+  for (j in 1:306) {
+    reaction_time[j]<-subjpss$WordPresentation.RT[j]
+    score[j]<-subjpss$WordPresentation.RESP[j]
+    word[j]<-as.character(subjpss$Word[j])
+    
+  }
+  clean_subj_pss<-data.frame(word,score,reaction_time)
+}
+sorted_pss<-clean_subj_pss[order(word),]
+sorted_task<-subjdata[order(subjdata$DisplayStr),]
+subj_RT<-matrix(nrow=length(sorted_pss$word), ncol=1)
+subj_trialtype<-matrix(nrow=length(sorted_pss$word), ncol=1)
+subj_pss_score<-matrix(nrow=length(sorted_pss$word), ncol=1)
+subj_word<-matrix(nrow=length(sorted_pss$word), ncol=1)
+for (k in 1:length(clean_subj_pss$word)){
+  #TASK SEGMENT SELECTION (AX CUE OR PROBE)
+  subj_RT[k]<-subjdata$Probe.RT[match(as.character(sorted_pss$word[k]), subjdata$DisplayStr)]
+  subj_trialtype[k]<-as.character(subjdata$TrialType[match(as.character(sorted_pss$word[k]), subjdata$DisplayStr)])
+  subj_word[k]<-as.character(subjdata$DisplayStr[match(as.character(sorted_pss$word[k]), subjdata$DisplayStr)])
+  #this tries to match each PSS word with a task trial, and then saves the RT, trial type, and pss score.
+  subj_pss_score[k]<-sorted_pss$score[k]
+}
 
+subj_taskpss<-data.frame(subj_RT,subj_pss_score,subj_trialtype,subj_word)
+#subset out BX and AY trials
+subj_taskpss<-subset(subj_taskpss, subj_trialtype=="AX")
+#break taskpss out into high and low SRP
+subj_highSRP<-subset(subj_taskpss, subj_taskpss$subj_pss_score>=5)
+subj_lowSRP<-subset(subj_taskpss, subj_taskpss$subj_pss_score<5)
+#apply the timefit method to each class of SRP
+high_exg<-timefit(x=subj_highSRP$subj_RT, iter = 0, size = length(subj_highSRP$subj_RT),
+                  replace = TRUE, plot = FALSE, start = NULL)
+high_tau<-high_exg@par[3]
+low_exg<-timefit(x=subj_lowSRP$subj_RT, iter = 0, size = length(subj_lowSRP$subj_RT),
+                 replace = TRUE, plot = FALSE, start = NULL)
+low_tau<-low_exg@par[3]
+#apply tau cutoff for each class of SRP
+high_plapse_trials<-subset(subj_highSRP, subj_highSRP$subj_RT>(high_tau*2.2))
+low_plapse_trials<-subset(subj_lowSRP, subj_lowSRP$subj_RT>(low_tau*2.2))
+#quantify  partial lapses for each class of SRP
+high_plapse<-dim(high_plapse_trials)[1]
+low_plapse<-dim(low_plapse_trials)[1]
+result<-cbind(high_plapse,low_plapse,high_tau,low_tau)
+return(result)}
 
-m2s1 <- lm(Probe.RT ~ seg_marker1a + seg_marker1b, data = subjdata)
-summary(m2s1)
+#looping through all subjects
+allsubjno<-data.frame(NULL)
+allsubj_high_plapse<-data.frame(NULL)
+allsubj_low_plapse<-data.frame(NULL)
+allsubj_high_tau<-data.frame(NULL)
+allsubj_low_tau<-data.frame(NULL)
 
-#visuzalize
-#Model a gaussian component and a negative exponential component
-#iteratively pick the best split point for the data
-#split the data by SRP, and repeat this process for both parts
-#repeat for all subjects
-###
+for (i in c(6,7,9,10,11,15,16,17,19,20,22,24,25,26,28,31,32,34,35,37,38,39)){
+  #extract
+  subjno <- i
+  subj_high_plapse<-partial_lapses(i)[1]
+  subj_low_plapse<-partial_lapses(i)[2]
+  subj_high_tau<-partial_lapses(i)[3]
+  subj_low_tau<-partial_lapses(i)[4]
+  #link
+  allsubjno<-rbind(allsubjno,subjno)
+  allsubj_high_plapse<-rbind(allsubj_high_plapse,subj_high_plapse)
+  allsubj_low_plapse<-rbind(allsubj_low_plapse,subj_low_plapse)
+  allsubj_high_tau<-rbind(allsubj_high_tau,subj_high_tau)
+  allsubj_low_tau<-rbind(allsubj_low_tau,subj_low_tau)
+}
+plapses<-cbind(allsubjno,allsubj_high_plapse,allsubj_low_plapse)
+colnames(plapses)<-c('allsubjno','allsubj_high_plapse','allsubj_low_plapse')
+
+plot(plapses$allsubjno,plapses$allsubj_high_plapse, pch= 19, col="red", ylim=c(0,150))
+points(plapses$allsubjno,plapses$allsubj_low_plapse, pch= 19, col="blue")
+
+segments(x0=c(plapses$allsubjno),y0=c(plapses$allsubj_low_plapse),x1=c(plapses$allsubjno),y1=c(plapses$allsubj_high_plapse))
