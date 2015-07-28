@@ -91,7 +91,7 @@ subj_taskpss<-data.frame(subj_RT,subj_pss_score,subj_trialtype,subj_word)
 subj_taskpss<-subset(subj_taskpss, subj_trialtype=="AX")
 #break taskpss out into high and low SRP
 subj_highSRP<-subset(subj_taskpss, subj_taskpss$subj_pss_score>=5)
-subj_lowSRP<-subset(subj_taskpss, subj_taskpss$subj_pss_score<5)
+subj_lowSRP<-subset(subj_taskpss, subj_taskpss$subj_pss_score<3)
 #apply the timefit method to each class of SRP
 high_exg<-timefit(x=subj_highSRP$subj_RT, iter = 0, size = length(subj_highSRP$subj_RT),
                   replace = TRUE, plot = FALSE, start = NULL)
@@ -115,7 +115,7 @@ allsubj_low_plapse<-data.frame(NULL)
 allsubj_high_tau<-data.frame(NULL)
 allsubj_low_tau<-data.frame(NULL)
 
-for (i in c(6,7,9,10,11,15,16,17,19,20,22,24,25,26,28,31,32,34,35,37,38,39)){
+for (i in c(33,34,35,36,37,38,39,41)){
   #extract
   subjno <- i
   subj_high_plapse<-partial_lapses(i)[1]
@@ -129,10 +129,17 @@ for (i in c(6,7,9,10,11,15,16,17,19,20,22,24,25,26,28,31,32,34,35,37,38,39)){
   allsubj_high_tau<-rbind(allsubj_high_tau,subj_high_tau)
   allsubj_low_tau<-rbind(allsubj_low_tau,subj_low_tau)
 }
+#plotting partial lapses
 plapses<-cbind(allsubjno,allsubj_high_plapse,allsubj_low_plapse)
 colnames(plapses)<-c('allsubjno','allsubj_high_plapse','allsubj_low_plapse')
-
 plot(plapses$allsubjno,plapses$allsubj_high_plapse, pch= 19, col="red", ylim=c(0,150))
 points(plapses$allsubjno,plapses$allsubj_low_plapse, pch= 19, col="blue")
-
 segments(x0=c(plapses$allsubjno),y0=c(plapses$allsubj_low_plapse),x1=c(plapses$allsubjno),y1=c(plapses$allsubj_high_plapse))
+#plotting Tau
+ptau<-cbind(allsubjno,allsubj_high_tau,allsubj_low_tau)
+colnames(ptau)<-c('allsubjno','allsubj_high_tau','allsubj_low_tau')
+plot(ptau$allsubjno,(ptau$allsubj_high_tau-ptau$allsubj_low_tau), pch= 19, col="red")
+abline(h=0)
+points(ptau$allsubjno,ptau$allsubj_low_tau, pch= 19, col="blue")
+segments(x0=c(ptau$allsubjno),y0=c(ptau$allsubj_low_tau),x1=c(ptau$allsubjno),y1=c(ptau$allsubj_high_tau))
+
