@@ -24,10 +24,20 @@
 ###Housekeeping:
 #IRC
 setwd("C:/Users/rphillips/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
+#CNS
+setwd("~/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
 library(ggplot2)
 install.packages('retimes')
 library(retimes)
+allsubjno<-data.frame(NULL)
+allsubj_high_plapse<-data.frame(NULL)
+allsubj_low_plapse<-data.frame(NULL)
+allsubj_high_tau<-data.frame(NULL)
+allsubj_low_tau<-data.frame(NULL)
 ###
+#test case:
+subjno=33
+#The function:
 partial_lapses<-function(subjno){
 #Bring in a single subject's RT distribution
 subjdata_name<- paste("subj", subjno, sep="","_task.csv")
@@ -91,30 +101,27 @@ subj_taskpss<-data.frame(subj_RT,subj_pss_score,subj_trialtype,subj_word)
 subj_taskpss<-subset(subj_taskpss, subj_trialtype=="AX")
 #break taskpss out into high and low SRP
 subj_highSRP<-subset(subj_taskpss, subj_taskpss$subj_pss_score>=5)
-subj_lowSRP<-subset(subj_taskpss, subj_taskpss$subj_pss_score<5)
+subj_lowSRP<-subset(subj_taskpss, subj_taskpss$subj_pss_score<3)
 #apply the timefit method to each class of SRP
 high_exg<-timefit(x=subj_highSRP$subj_RT, iter = 0, size = length(subj_highSRP$subj_RT),
-                  replace = TRUE, plot = FALSE, start = NULL)
+                  replace = TRUE, plot = TRUE, start = NULL)
 high_tau<-high_exg@par[3]
 low_exg<-timefit(x=subj_lowSRP$subj_RT, iter = 0, size = length(subj_lowSRP$subj_RT),
-                 replace = TRUE, plot = FALSE, start = NULL)
+                 replace = TRUE, plot = TRUE, start = NULL)
 low_tau<-low_exg@par[3]
 #apply tau cutoff for each class of SRP
-high_plapse_trials<-subset(subj_highSRP, subj_highSRP$subj_RT>(high_tau*2.2))
-low_plapse_trials<-subset(subj_lowSRP, subj_lowSRP$subj_RT>(low_tau*2.2))
+high_plapse_trials<-subset(subj_highSRP, subj_highSRP$subj_RT>(high_tau*4.5))
+low_plapse_trials<-subset(subj_lowSRP, subj_lowSRP$subj_RT>(low_tau*4.5))
 #quantify  partial lapses for each class of SRP
 high_plapse<-dim(high_plapse_trials)[1]
 low_plapse<-dim(low_plapse_trials)[1]
+high_plapse_rate<-(dim(high_plapse_trials)[1]/dim(subj_highSRP)[1])
+low_plapse_rate<-(dim(low_plapse_trials)[1]/dim(subj_lowSRP)[1])
+
 result<-cbind(high_plapse,low_plapse,high_tau,low_tau)
 return(result)}
 
-#looping through all subjects
-allsubjno<-data.frame(NULL)
-allsubj_high_plapse<-data.frame(NULL)
-allsubj_low_plapse<-data.frame(NULL)
-allsubj_high_tau<-data.frame(NULL)
-allsubj_low_tau<-data.frame(NULL)
-
+#Looping through all subjects
 for (i in c(6,7,9,10,11,15,16,17,19,20,22,24,25,26,28,31,32,34,35,37,38,39)){
   #extract
   subjno <- i
@@ -131,7 +138,7 @@ for (i in c(6,7,9,10,11,15,16,17,19,20,22,24,25,26,28,31,32,34,35,37,38,39)){
 }
 plapses<-cbind(allsubjno,allsubj_high_plapse,allsubj_low_plapse)
 colnames(plapses)<-c('allsubjno','allsubj_high_plapse','allsubj_low_plapse')
-
+#Plotting group data
 plot(plapses$allsubjno,plapses$allsubj_high_plapse, pch= 19, col="red", ylim=c(0,150))
 points(plapses$allsubjno,plapses$allsubj_low_plapse, pch= 19, col="blue")
 
