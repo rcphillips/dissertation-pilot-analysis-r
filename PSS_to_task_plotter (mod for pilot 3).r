@@ -16,12 +16,12 @@ setwd("F:/r/analyses (in r)/AX_RT_analysis")
 
 ###
 #TRIAL TYPE SELECTION
-trial_type_of_interest <- "AY"
+trial_type_of_interest <- "AX"
 
 ###
 
 #subject counter start (for JUST pss, not cbind with task)
-i=25
+i=41
 allsubj_personal<-data.frame(NULL)
 allsubj_high_tau<-data.frame(NULL)
 allsubj_low_tau<-data.frame(NULL)
@@ -42,7 +42,7 @@ for  (i in c(24:32)){
   #fun way of looking at which trials they got right and wrong!
   table(subjdata$TrialType[which(subjdata$Probe.ACC=="0")])
   ###
-  colors(1:20)
+#  colors(1:20)
   #when are incorr AX occuring?
   
   plot(subjdata$Probe.ACC,col=i)
@@ -118,8 +118,8 @@ for  (i in c(24:32)){
 
   #plot the group RT by the wordtype using ggplot
   #library(ggplot2)
-  #ggplot(subj_personal, aes(x=subj_RT)) + geom_histogram(fill="white", colour="black")+
-  #  facet_grid(group ~ .)
+  ggplot(subj_personal, aes(x=subj_RT)) + geom_histogram(fill="white", colour="black")+
+    facet_grid(group ~ .)
   #Good! that works well for a single subject, how about multiple subjects
   
   
@@ -181,5 +181,6 @@ ggplot(allsubj_personal, aes(x=subj_RT)) +
   facet_grid(group ~ .)
 
 #word extractor!
-subj24_personal_ratings$word[which(subj24_personal_salience$subj_RT>300)]
+subj41_personal_ratings$word[which(subj_sail$subj_RT>800)]
 
+summary(subj_sail$subj_RT)

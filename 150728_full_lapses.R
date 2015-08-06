@@ -2,7 +2,8 @@
 #just trying to define a function which classifies task trials by PSR, and then
 #produces a table of high/low full lapses
 
-
+#CNS
+setwd("~/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
 #test case:
 subjno=33
 #The function:
@@ -76,3 +77,4 @@ full_lapses<-function(subjno){
   return(result)
 }
 
+full_lapses(33)
