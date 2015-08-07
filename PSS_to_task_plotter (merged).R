@@ -10,28 +10,26 @@
 #Set working directory to flash drive (on CNS Mac))
 #setwd("/Volumes/NEW VOLUME/r/analyses (in r)/AX_RT_analysis")
 #Set working directory to flash drive (on IRC PC)
-#setwd("F:/r/analyses (in r)/AX_RT_analysis")
+setwd("C:/Users/rphillips/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
 #Set working directory to flash drive (on laptop)
 #setwd("H:/r/analyses (in r)/AX_RT_analysis")
 #Set working directory to box sync! Does this work? (from CNS)
-setwd("~/Box Sync/SRP_AXCPT_pilot_data")
+#setwd("~/Box Sync/SRP_AXCPT_pilot_data")
 ###
 #TRIAL TYPE SELECTION
 trial_type_of_interest <- "AX"
 
 ###
-<<<<<<< HEAD
-i=33
-=======
-i=3 
->>>>>>> 2c7fd4a0de2df06e3b530bc9979b73beae7ff84d
+i=6 
+
 #subject counter start (for JUST pss, not cbind with task)
 allsubj_personal<-data.frame(NULL)
 allsubj_high_tau<-data.frame(NULL)
 allsubj_low_tau<-data.frame(NULL)
-allsubj_num<-data.frame(subjnum=c(23:32))
+allsubj_num<-data.frame(subjnum=c(6,7,9,10,11,13,15,16,17,18,19,20,22,24:32))
 allsubj_full_lapse<-data.frame(NULL)
-allsubj_partial_lapse<-data.frame(NULL)
+allsubj_high_partial_lapse<-data.frame(NULL)
+allsubj_low_partial_lapse<-data.frame(NULL)
 #extract the dta for all subjects
 for  (i in c(6,7,9,10,11,13,15,16,17,18,19,20,22,24:32)){
   subjpss_name<- paste("subj", i, sep="","_pss.csv")
@@ -42,18 +40,7 @@ for  (i in c(6,7,9,10,11,13,15,16,17,18,19,20,22,24:32)){
   #Remove inaccurate trials from the subjdata. This part of the task is just concerned with
   #correct trials/partial lapses. Incorrect trials are dealt with elsewhere.
   subjdata<-subset(subjdata, subjdata$Cue.ACC=="1" & subjdata$Probe.ACC=="1")
-#####Side analyses
-  #fun way of looking at which trials they got right and wrong!
-  table(subjdata$TrialType[which(subjdata$Probe.ACC=="1")])
-  #note, have to do this before removing incorr trials
-  ###
-  #colors(1:20)
-  #when are incorr AX occuring?#this doesn't account for BLOCKS
-  #plot(subjdata$Probe.ACC,col=i)
-  ###
-  #subj_full_lapse<-length(subset(subjdata$Probe.ACC, subjdata$TrialType=="AX"))
-  #allsubj_full_lapse<-c(allsubj_full_lapse, subj_full_lapse)
-#####
+  
   
   if (i %in% c(6,7,9,10,11,13,15,16,17,18,19,20,22)==TRUE){
     #9, 13, 16, 18 #removed for low AX accuracy, low BX accuracy
@@ -89,15 +76,12 @@ for  (i in c(6,7,9,10,11,13,15,16,17,18,19,20,22,24:32)){
     clean_subj_pss<-data.frame(word,score,reaction_time)
   }
   #save the output
-  subjdigit<-subjpss$Subject[1] #subjno
-  savefilename<-paste("subj", subjdigit, sep="", "_personal_ratings")
-  assign(savefilename, clean_subj_pss)
+  #subjdigit<-subjpss$Subject[1] #subjno
+  #savefilename<-paste("subj", subjdigit, sep="", "_personal_ratings")
+  #assign(savefilename, clean_subj_pss)
   ###
-  #Sort the two lists alphabetically, and then just apply the PSS scores to the task scores.
   sorted_pss<-clean_subj_pss[order(word),]
   sorted_task<-subjdata[order(subjdata$DisplayStr),]
-  #Turns out the above method had problems too. But! I have a solution!
-  #And it's called match()!
   subj_RT<-matrix(nrow=length(sorted_pss$word), ncol=1)
   subj_trialtype<-matrix(nrow=length(sorted_pss$word), ncol=1)
   subj_pss_score<-matrix(nrow=length(sorted_pss$word), ncol=1)
@@ -114,11 +98,11 @@ for  (i in c(6,7,9,10,11,13,15,16,17,18,19,20,22,24:32)){
     subj_pss_score[k]<-sorted_pss$score[k]
   }
   
-  #getting it plotted:
+  #splitting up distributions
   subj_sail<-data.frame(subj_RT,subj_pss_score,subj_trialtype)
   
   subj_sail<-subset(subj_sail, subj_trialtype==trial_type_of_interest)
-  #subj_sail thus contains a paired list of RTs and PSS scores. What I would like to do now is have this also contain AX trial type info.
+  #subj_sail thus contains a paired list of RTs and PSS scores.
   summary(subj_pss_score)[5]
   subj_personal_high<-subset(subj_sail, subj_sail$subj_pss_score>=5)
   #assign categorical variable for plotting
@@ -128,17 +112,29 @@ for  (i in c(6,7,9,10,11,13,15,16,17,18,19,20,22,24:32)){
   subj_personal<-rbind(subj_personal_high,subj_personal_low)
   
   #save the output
-  subjdigit<-subjdata$Subject[1] #subjno
-  savefilename<-paste("subj", subjdigit, sep="", "_personal_salience")
-  assign(savefilename, subj_personal)
+  #subjdigit<-subjdata$Subject[1] #subjno
+  #savefilename<-paste("subj", subjdigit, sep="", "_personal_salience")
+  #assign(savefilename, subj_personal)
   
-  subj_partial_lapse<-length(which(subj_personal$subj_RT>550))
-  allsubj_partial_lapse<-c(allsubj_partial_lapse, subj_partial_lapse)
+  high_exg<-timefit(x=subj_personal_high$subj_RT, iter = 0, size = length(subjdata$Probe.RT),
+             replace = TRUE, plot = FALSE, start = NULL)
+  high_tau<-high_exg@par[3]
+  
+  low_exg<-timefit(x=subj_personal_low$subj_RT, iter = 0, size = length(subjdata$Probe.RT),
+                  replace = TRUE, plot = FALSE, start = NULL)
+  low_tau<-low_exg@par[3]
+  
+  subj_high_partial_lapse<-length(which(subj_personal_high$subj_RT>(high_tau*2.2)))
+  allsubj_high_partial_lapse<-rbind(allsubj_high_partial_lapse, subj_high_partial_lapse)
+  
+  subj_low_partial_lapse<-length(which(subj_personal_low$subj_RT>(low_tau*2.2)))
+  allsubj_low_partial_lapse<-rbind(allsubj_low_partial_lapse, subj_low_partial_lapse)
   #knit the data into one large table
 allsubj_personal<-rbind(allsubj_personal,subj_personal)
 
 
 }#END OF MAIN LOOP
+
 #Plot the group results
 library(ggplot2)
 plot_title<-paste(trial_type_of_interest,"probe RT with median PSR split", ' ')
