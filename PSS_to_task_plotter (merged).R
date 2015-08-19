@@ -5,6 +5,7 @@
 #Bring in the PSS data for one subject
 #generate new groups based on quartile split.
 #plot the result
+###
 #Set working directory to flash drive (on home PC))
 #setwd("F:/r/analyses (in r)/AX_RT_analysis")
 #Set working directory to flash drive (on CNS Mac))
@@ -15,23 +16,25 @@ setwd("C:/Users/rphillips/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
 #setwd("H:/r/analyses (in r)/AX_RT_analysis")
 #Set working directory to box sync! Does this work? (from CNS)
 #setwd("~/Box Sync/SRP_AXCPT_pilot_data")
+install.packages("retimes")
+library(retimes)
 ###
 #TRIAL TYPE SELECTION
 trial_type_of_interest <- "AX"
 
 ###
-i=6 
+i=33 
 
 #subject counter start (for JUST pss, not cbind with task)
 allsubj_personal<-data.frame(NULL)
 allsubj_high_tau<-data.frame(NULL)
 allsubj_low_tau<-data.frame(NULL)
-allsubj_num<-data.frame(subjnum=c(6,7,9,10,11,13,15,16,17,18,19,20,22,24:32))
+allsubj_num<-data.frame(subjnum=c(6,7,9,10,11,13,15,16,17,18,19,20,22,24:32,34:42))
 allsubj_full_lapse<-data.frame(NULL)
 allsubj_high_partial_lapse<-data.frame(NULL)
 allsubj_low_partial_lapse<-data.frame(NULL)
 #extract the dta for all subjects
-for  (i in c(6,7,9,10,11,13,15,16,17,18,19,20,22,24:32)){
+for  (i in c(33, 35, 36,37,38,40,42)){
   subjpss_name<- paste("subj", i, sep="","_pss.csv")
   subjpss<-read.csv(subjpss_name,stringsAsFactors=FALSE)
   #load and name the csv for RTs
@@ -107,7 +110,7 @@ for  (i in c(6,7,9,10,11,13,15,16,17,18,19,20,22,24:32)){
   subj_personal_high<-subset(subj_sail, subj_sail$subj_pss_score>=5)
   #assign categorical variable for plotting
   subj_personal_high$group<-rep("high",nrow(subj_personal_high))
-  subj_personal_low<-subset(subj_sail, subj_sail$subj_pss_score<4)
+  subj_personal_low<-subset(subj_sail, subj_sail$subj_pss_score<3)
   subj_personal_low$group<-rep("low",nrow(subj_personal_low))
   subj_personal<-rbind(subj_personal_high,subj_personal_low)
   
@@ -149,6 +152,12 @@ ggplot(allsubj_personal, aes(x=subj_RT)) +
         plot.title=element_text(size=30)) +
   facet_grid(group ~ .)
 
+ggplot(allsubj_personal, aes(x=subj_RT, fill = group)) +
+  geom_bar(pos="identity", alpha="0.5")
+
+table(allsubj_personal$group)
+
 #word extractor!
-subjtask_and_pss$subj_pss_word[which(subjtask_and_pss$subj_pss_score>5)]
+#subjtask_and_pss$subj_pss_word[which(subjtask_and_pss$subj_pss_score>5)]
+
 
