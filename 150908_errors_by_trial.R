@@ -4,6 +4,8 @@
 ###Housekeeping:
 #IRC
 setwd("C:/Users/rphillips/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
+#CNS
+setwd("~/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
 ###
 #rip off SRP extractor from "ex_gaussian.R"
 #produce group result table
@@ -16,7 +18,8 @@ errors_by_AXtype<-function(subjno){
 #Bring in a single subject's RT distribution
   subjdata_name<- paste("subj", subjno, sep="","_task.csv")
   subjdata<-read.csv(subjdata_name,stringsAsFactors=FALSE)
-  
+  #remove incorrect CUES. We want them to have the cue correct
+  subjdata<-subset(subjdata, subjdata$Cue.ACC=="1")
 #Bring in a single subject's PSR info
   subjpss_name<- paste("subj", subjno, sep="","_pss.csv")
   subjpss<-read.csv(subjpss_name,stringsAsFactors=FALSE)
@@ -78,7 +81,61 @@ errors_by_AXtype<-function(subjno){
   subj_highSRP<-subset(subj_taskpss, subj_taskpss$subj_pss_score>=5)
   subj_lowSRP<-subset(subj_taskpss, subj_taskpss$subj_pss_score<3)
 
-  highSRP_BXtable<-table(subj_highSRP$subj_trialtype,subj_highSRP$subj_acc)[4,]
-  lowSRP_BXtable<-table(subj_lowSRP$subj_trialtype,subj_lowSRP$subj_acc)[4,]
-  result<-rbind(highSRP_BXtable,lowSRP_BXtable)
+  highSRP_BXtable<-table(subj_highSRP$subj_trialtype,subj_highSRP$subj_acc)[3,]
+  lowSRP_BXtable<-table(subj_lowSRP$subj_trialtype,subj_lowSRP$subj_acc)[3,]
+  highSRP_RT<-c(mean(subj_highSRP$subj_RT,na.rm=TRUE),0)
+  lowSRP_RT<-c(mean(subj_lowSRP$subj_RT,na.rm=TRUE),0)
+  result<-rbind(highSRP_BXtable,lowSRP_BXtable,highSRP_RT,lowSRP_RT)
   return(result)}
+##########
+##########
+#looping through all subjs
+
+allsubjno<-data.frame(NULL)
+allsubj_high_incorr<-data.frame(NULL)
+allsubj_low_incorr<-data.frame(NULL)
+allsubj_high_corr<-data.frame(NULL)
+allsubj_low_corr<-data.frame(NULL)
+allsubj_high_RT<-data.frame(NULL)
+allsubj_low_RT<-data.frame(NULL)
+for (i in c(33,34,35,36,37,38,39,41,42,43,44,45)){
+  #extract
+  subjno <- i
+  subj_high_incorr<-errors_by_AXtype(i)[1]
+  subj_low_incorr<-errors_by_AXtype(i)[2]
+  subj_high_corr<-errors_by_AXtype(i)[5]
+  subj_low_corr<-errors_by_AXtype(i)[6]
+  subj_high_RT<-errors_by_AXtype(i)[3]
+  subj_low_RT<-errors_by_AXtype(i)[4]
+  #link
+  allsubjno<-rbind(allsubjno,subjno)
+  allsubj_high_incorr<-rbind(allsubj_high_incorr,subj_high_incorr)
+  allsubj_low_incorr<-rbind(allsubj_low_incorr,subj_low_incorr)
+  allsubj_high_corr<-rbind(allsubj_high_corr,subj_high_corr)
+  allsubj_low_corr<-rbind(allsubj_low_corr,subj_low_corr)
+  allsubj_high_RT<-rbind(allsubj_high_RT,subj_high_RT)
+  allsubj_low_RT<-rbind(allsubj_low_RT,subj_low_RT)
+}
+allsubj_err_by_type<-cbind(allsubjno,allsubj_high_incorr,allsubj_high_corr,allsubj_low_incorr,allsubj_low_corr,allsubj_high_RT,allsubj_low_RT)
+colnames(allsubj_err_by_type)<-c('allsubjno','allsubj_high_incorr','allsubj_high_corr','allsubj_low_incorr','allsubj_low_corr','allsubj_high_RT','allsubj_low_RT')
+
+#Just getting Rates
+allsubj_bxerr_high_rate<-allsubj_err_by_type$allsubj_high_incorr/(allsubj_err_by_type$allsubj_high_incorr+all_subj_err_by_type$allsubj_high_corr)
+
+allsubj_bxerr_low_rate<-allsubj_err_by_type$allsubj_low_incorr/(allsubj_err_by_type$allsubj_low_incorr+all_subj_err_by_type$allsubj_low_corr)
+
+#Plotting group data
+=======
+plot(allsubj_err_by_type$allsubjno,allsubj_err_by_type$allsubj_high_RT, pch= 19, col="red",ylim=c(0,1500))
+points(allsubj_err_by_type$allsubjno,allsubj_err_by_type$allsubj_low_RT, pch= 19, col="blue")
+segments(x0=c(allsubj_err_by_type$allsubjno),y0=c(allsubj_err_by_type$allsubj_high_RT),x1=c(allsubj_err_by_type$allsubjno),y1=c(allsubj_err_by_type$allsubj_low_RT))
+#plotting Tau
+ptau<-cbind(allsubjno,allsubj_high_tau,allsubj_low_tau)
+colnames(ptau)<-c('allsubjno','allsubj_high_tau','allsubj_low_tau')
+plot(ptau$allsubjno,(ptau$allsubj_high_tau-ptau$allsubj_low_tau), pch= 19, col="red")
+abline(h=0)
+points(ptau$allsubjno,ptau$allsubj_low_tau, pch= 19, col="blue")
+segments(x0=c(ptau$allsubjno),y0=c(ptau$allsubj_low_tau),x1=c(ptau$allsubjno),y1=c(ptau$allsubj_high_tau))
+
+
+
