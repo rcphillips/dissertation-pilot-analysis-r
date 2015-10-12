@@ -17,6 +17,8 @@
 #Housekeeping
 #CNS 
 setwd("~/Desktop/test_csvforMRI_withPSR")
+#IRC
+setwd("C:/Users/rphillips/Box Sync/Proj_SRPAX/test_csvforMRI_withPSR")
 ###
 #import task csv
 #import psr csv

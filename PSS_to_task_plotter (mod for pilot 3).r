@@ -29,7 +29,7 @@ allsubj_num<-data.frame(subjnum=c(23:32))
 allsubj_full_lapse<-data.frame(NULL)
 allsubj_partial_lapse<-data.frame(NULL)
 #extract the dta for all subjects
-for  (i in c(24:32)){
+for  (i in c(34,35,36,38,37,41,42,43,45)){
   #9, 13, 16, 18 #removed for low AX accuracy, low BX accuracy
   #NOTE: these removed subjects have to be added back in in order
   #load and name the csv for PSS
