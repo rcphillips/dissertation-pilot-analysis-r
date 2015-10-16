@@ -53,5 +53,12 @@ table(srplabel)
 #join this column to task csv
 subjtask<-cbind(subjtask,srplabel)
 subjtask$srplabel
+#setting the rating to be 1 (low) or 2 (high):
+rating[which(subjtask$srplabel=="high")]<-2
+rating[which(subjtask$srplabel=="low")]<-1
+word<-subjtask$DisplayStr
+data<-data.frame(NULL)
+data<-cbind(word,rating)
+write.csv(data, file = "word_ratings_subj10.csv", row.names=FALSE, quote=FALSE)
 #save out csv
 write.csv(subjtask, file = "srp_10_taskpsr.csv")
