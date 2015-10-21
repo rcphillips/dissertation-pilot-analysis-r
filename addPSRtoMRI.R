@@ -16,7 +16,7 @@
 ###
 #Housekeeping
 #CNS 
-setwd("~/Desktop/test_csvforMRI_withPSR")
+setwd("~/Box Sync/test_csvforMRI_withPSR")
 ###
 #import task csv
 #import psr csv
@@ -52,4 +52,11 @@ table(srplabel)
 subjtask<-cbind(subjtask,srplabel)
 subjtask$srplabel
 #save out csv
-write.csv(subjtask, file = "srp_10_taskpsr.csv")
+write.csv(subjtask, file = "151014_srp_10_taskpsr.csv",quote =FALSE)
+
+#now to remove double quotes
+
+
+
+
+
