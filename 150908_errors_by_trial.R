@@ -4,8 +4,6 @@
 ###Housekeeping:
 #IRC
 setwd("C:/Users/rphillips/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
-#CNS
-setwd("~/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
 ###
 #rip off SRP extractor from "ex_gaussian.R"
 #produce group result table
