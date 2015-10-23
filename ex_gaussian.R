@@ -122,7 +122,7 @@ result<-cbind(high_plapse,low_plapse,high_tau,low_tau)
 return(result)}
 
 #Looping through all subjects
-for (i in c(6,7,9,10,11,15,16,17,19,20,22,24,25,26,28,31,32,34,35,37,38,39)){
+for (i in c(6,7,9,10,11,15,16,17,19,20,22,24,25,26,28,31,32,34,35,37,38,39,40,41,42,43,44,45)){
 =======
 #looping through all subjects
 allsubjno<-data.frame(NULL)

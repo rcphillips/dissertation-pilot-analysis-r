@@ -16,9 +16,7 @@
 ###
 #Housekeeping
 #CNS 
-setwd("~/Desktop/test_csvforMRI_withPSR")
-#IRC
-setwd("C:/Users/rphillips/Box Sync/Proj_SRPAX/test_csvforMRI_withPSR")
+setwd("~/Box Sync/test_csvforMRI_withPSR")
 ###
 #import task csv
 #import psr csv
@@ -61,4 +59,11 @@ data<-data.frame(NULL)
 data<-cbind(word,rating)
 write.csv(data, file = "word_ratings_subj10.csv", row.names=FALSE, quote=FALSE)
 #save out csv
-write.csv(subjtask, file = "srp_10_taskpsr.csv")
+write.csv(subjtask, file = "151014_srp_10_taskpsr.csv",quote =FALSE)
+
+#now to remove double quotes
+
+
+
+
+
