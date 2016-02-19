@@ -16,7 +16,8 @@
 ###
 #Housekeeping
 #CNS 
-setwd("~/Box Sync/test_csvforMRI_withPSR")
+setwd("C:/Users/rphillips/Desktop/SRP_AX_behav_data")
+
 ###
 #import task csv
 #import psr csv
@@ -39,7 +40,9 @@ subjpsr<-subset(subjpsr[
 subj_psr_score<-matrix(nrow=length(subjpsr$word), ncol=1)
 for (k in 1:length(subjtask$DisplayStr)){
 #this tries to match each psr word with a task trial, and then saves the RT, trial type, and psr score.
-  subj_psr_score[k]<-as.character(subjpsr$WordPresentation.RESP[match(as.character(subjtask$DisplayStr[k]), subjpsr$Word)])
+  subj_psr_score[k]<-as.character(subjpsr$WordPresentation.RESP[match(as.character(
+      subjtask$DisplayStr[k]), subjpsr$Word)])
+  #for 
 }
 #join this column to task csv
 subjtask<-cbind(subjtask,subj_psr_score)
@@ -52,11 +55,18 @@ table(srplabel)
 subjtask<-cbind(subjtask,srplabel)
 subjtask$srplabel
 #setting the rating to be 1 (low) or 2 (high):
+rating<-matrix(nrow=length(subjpsr$word), ncol=1)
 rating[which(subjtask$srplabel=="high")]<-2
 rating[which(subjtask$srplabel=="low")]<-1
 word<-subjtask$DisplayStr
 data<-data.frame(NULL)
 data<-cbind(word,rating)
+data$WordOnsets<-as.numeric(subjtask$Probe.OnsetTime)+as.numeric(subjtask$ITITime)+1000
+#add word onsets column
+for (k in 1:length(subjtask$DisplayStr)){
+  WordOnsets[k]<-subjtask$Probe.OnsetTime[k]+subjtask$ITITime[k]+1000
+}
+newcolumn<-subjtask$Probe.OnsetTime+subjtask$ITITime+1000
 write.csv(data, file = "word_ratings_subj10.csv", row.names=FALSE, quote=FALSE)
 #save out csv
 write.csv(subjtask, file = "151014_srp_10_taskpsr.csv",quote =FALSE)
