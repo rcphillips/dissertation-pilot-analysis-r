@@ -17,7 +17,7 @@ setwd("C:/Users/rphillips/Desktop/SRP_AX_behav_data")
 subjno<-10
 create_word_onset<-function(subjno){
   ##load csv
-  subjtask_name<-c(paste('srp_',subjno,'_task.csv', sep=''))
+  subjtask_name<-c(paste('srp_',subjno,'.csv', sep=''))
   subjtask<-read.csv(subjtask_name,stringsAsFactors=FALSE)
   subjpsr_name<-c(paste('srp_',subjno,'_psr.csv', sep=''))
   subjpsr<-read.csv(subjpsr_name,stringsAsFactors=FALSE)
@@ -45,7 +45,7 @@ create_word_onset<-function(subjno){
   #bind the new columns to the subjtask
   subjtask$SRP_Rating<-srplabel
   ##save out csv
-  write.csv(subjtask, file = c(paste('subj',subjno,'_task_test.csv', sep='')), row.names=FALSE, quote=FALSE)
+  write.csv(subjtask, file = c(paste('srp_',subjno,'test.csv', sep='')), row.names=FALSE, quote=FALSE)
 
 }
 
