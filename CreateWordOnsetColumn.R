@@ -12,9 +12,14 @@
 ###
 #update 160219 Adding in rating as well, and adding it all into the task.csv. No seperate file.
 ###
-setwd("C:/Users/rphillips/Desktop/SRP_AX_behav_data")
+#setwd("C:/Users/rphillips/Desktop/SRP_AX_behav_data")
 #define function:
-subjno<-10
+subjno<-38
+#just for testing
+setwd("C:/Users/rphillips/PycharmProjects/convert_eprime") #now works directly with pycharm
+subjtask<-read.csv('srp05_task_test.csv',stringsAsFactors=FALSE)
+setwd("C:/Users/rphillips/Desktop/SRP_AX_behav_data")
+subjpsr<-read.csv('subj38_pss.csv',stringsAsFactors=FALSE)
 create_word_onset<-function(subjno){
   ##load csv
   subjtask_name<-c(paste('srp_',subjno,'.csv', sep=''))
