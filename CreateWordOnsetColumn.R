@@ -12,6 +12,7 @@
 ###
 #update 160219 Adding in rating as well, and adding it all into the task.csv. No seperate file.
 ###
+<<<<<<< HEAD
 #setwd("C:/Users/rphillips/Desktop/SRP_AX_behav_data")
 #define function:
 subjno<-38
@@ -20,20 +21,30 @@ setwd("C:/Users/rphillips/PycharmProjects/convert_eprime") #now works directly w
 subjtask<-read.csv('srp05_task_test.csv',stringsAsFactors=FALSE)
 setwd("C:/Users/rphillips/Desktop/SRP_AX_behav_data")
 subjpsr<-read.csv('subj38_pss.csv',stringsAsFactors=FALSE)
+=======
+
+#define function:
+>>>>>>> 8196892299d038d0a57394bc14488953fa85be90
 create_word_onset<-function(subjno){
   ##load csv
-  subjtask_name<-c(paste('srp_',subjno,'.csv', sep=''))
+  subjtask_name<-c(paste('srp_',subjno,'_task.csv', sep=''))
   subjtask<-read.csv(subjtask_name,stringsAsFactors=FALSE)
   subjpsr_name<-c(paste('srp_',subjno,'_psr.csv', sep=''))
   subjpsr<-read.csv(subjpsr_name,stringsAsFactors=FALSE)
-  subjpsr<-subset(subjpsr, select = c(Subject, Block, Word, WordPresentation.RESP,WordPresentation.RT))
+  subjpsr<-subset(subjpsr, select = c(Subject, Word, WordPresentation.RESP,WordPresentation.RT))
   #remove null columns (check that this does not disrupt vectors)
   subjpsr<-subset(subjpsr[
     which(subjpsr$Word!=""),])
+  subjpsr<-subset(subjpsr[
+    which(subjpsr$Word!="NULL"),])
   ##remove null columns (check that this does not disrupt vectors)
   subjtask<-subset(subjtask[which(subjtask$Probe.ACC!="NULL"),])
   ##create new column for word onsets
+<<<<<<< HEAD
   subjtask$WordOnset<-as.numeric(subjtask$Cue.RTTime)-4515
+=======
+  subjtask$WordOnset<-as.numeric(subjtask$Cue.OnsetTime)-4515
+>>>>>>> 8196892299d038d0a57394bc14488953fa85be90
   ##create new column for SRP rating
   subj_psr_score<-matrix(nrow=length(subjpsr$word), ncol=1)
   for (k in 1:length(subjtask$DisplayStr)){
@@ -50,10 +61,7 @@ create_word_onset<-function(subjno){
   #bind the new columns to the subjtask
   subjtask$SRP_Rating<-srplabel
   ##save out csv
-  write.csv(subjtask, file = c(paste('srp_',subjno,'test.csv', sep='')), row.names=FALSE, quote=FALSE)
-
+  write.csv(subjtask, file = c(paste('srp_',subjno,'_all.csv', sep='')), row.names=FALSE, quote=FALSE)
 }
 
-for(i in 1:30){
-  create_word_onset(i)
-}
+for(i in c(20:26,29:33)){create_word_onset(i)}

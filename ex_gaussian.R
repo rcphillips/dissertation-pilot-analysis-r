@@ -26,6 +26,8 @@
 setwd("C:/Users/rphillips/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
 #CNS
 setwd("~/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
+#home
+setwd("E:/Box Sync/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
 library(ggplot2)
 install.packages('retimes')
 library(retimes)

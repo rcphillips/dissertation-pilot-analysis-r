@@ -16,8 +16,7 @@
 ###
 #Housekeeping
 #CNS 
-setwd("C:/Users/rphillips/Desktop/SRP_AX_behav_data")
-
+setwd("~/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly/")
 ###
 #import task csv
 #import psr csv
@@ -25,14 +24,16 @@ setwd("C:/Users/rphillips/Desktop/SRP_AX_behav_data")
 #join this column to task csv
 #save out as task-psr csv
 ###
-#import task csv
-subjtask<-read.csv('srp_10_task.csv',stringsAsFactors=FALSE)
+for  (i in c(52)){
+subjdata_name<- paste("subj", i, sep="","_task.csv")
+subjtask<-read.csv(subjdata_name,stringsAsFactors=FALSE)
 #remove null columns (check that this does not disrupt vectors)
 subjtask<-subset(subjtask[which(subjtask$Probe.ACC!="NULL"),])
 #import psr csv
-subjpsr<-read.csv('srp_10_psr.csv',stringsAsFactors=FALSE)
+subjpsr_name<- paste("subj", i, sep="","_pss.csv")
+subjpsr<-read.csv(subjpsr_name,stringsAsFactors=FALSE)
 subjpsr<-subset(subjpsr, select = c(Subject, Block, Word, WordPresentation.RESP,WordPresentation.RT))
-#remove null columns (check that this does not disrupt vectors)
+#remove null columns (check that this does not disrupt vectors) (seems like it doesnt)
 subjpsr<-subset(subjpsr[
   which(subjpsr$Word!=""),])
 #generate psr column
@@ -54,6 +55,7 @@ table(srplabel)
 #join this column to task csv
 subjtask<-cbind(subjtask,srplabel)
 subjtask$srplabel
+rating<-matrix(nrow = length(subjtask$srplabel), ncol=1)
 #setting the rating to be 1 (low) or 2 (high):
 rating<-matrix(nrow=length(subjpsr$word), ncol=1)
 rating[which(subjtask$srplabel=="high")]<-2
@@ -61,6 +63,11 @@ rating[which(subjtask$srplabel=="low")]<-1
 word<-subjtask$DisplayStr
 data<-data.frame(NULL)
 data<-cbind(word,rating)
+<<<<<<< HEAD
+output_name<- paste("word_ratings_srp", i, sep="",".csv")
+write.csv(data, file =output_name, row.names=FALSE, quote=FALSE)
+}
+=======
 data$WordOnsets<-as.numeric(subjtask$Probe.OnsetTime)+as.numeric(subjtask$ITITime)+1000
 #add word onsets column
 for (k in 1:length(subjtask$DisplayStr)){
@@ -68,8 +75,9 @@ for (k in 1:length(subjtask$DisplayStr)){
 }
 newcolumn<-subjtask$Probe.OnsetTime+subjtask$ITITime+1000
 write.csv(data, file = "word_ratings_subj10.csv", row.names=FALSE, quote=FALSE)
+>>>>>>> a2fca423b9205b017c77a600fb3427c77cabb0b9
 #save out csv
-write.csv(subjtask, file = "151014_srp_10_taskpsr.csv",quote =FALSE)
+#write.csv(subjtask, file = "151014_srp_10_taskpsr.csv",quote =FALSE)
 
 #now to remove double quotes
 

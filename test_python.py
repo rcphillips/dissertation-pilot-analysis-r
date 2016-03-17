@@ -4,42 +4,43 @@ Created on Tue Jul 21 10:14:18 2015
 
 @author: rcphillips
 """
-import numpy
-from pandas import DataFrame, Series
-
-countries = ['Russian Fed.', 'Norway', 'Canada', 'United States',
-             'Netherlands', 'Germany', 'Switzerland', 'Belarus',
-             'Austria', 'France', 'Poland', 'China', 'Korea', 
-             'Sweden', 'Czech Republic', 'Slovenia', 'Japan',
-             'Finland', 'Great Britain', 'Ukraine', 'Slovakia',
-             'Italy', 'Latvia', 'Australia', 'Croatia', 'Kazakhstan']
-
-gold = [13, 11, 10, 9, 8, 8, 6, 5, 4, 4, 4, 3, 3, 2, 2, 2, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0]
-silver = [11, 5, 10, 7, 7, 6, 3, 0, 8, 4, 1, 4, 3, 7, 4, 2, 4, 3, 1, 0, 0, 2, 2, 2, 1, 0]
-bronze = [9, 10, 5, 12, 9, 5, 2, 1, 5, 7, 1, 2, 2, 6, 2, 4, 3, 1, 2, 1, 0, 6, 2, 1, 0, 1]
-
-olympic_medal_counts = {'country_name':Series(countries),
-                        'gold': Series(gold),
-                        'silver': Series(silver),
-                        'bronze': Series(bronze)}
-df = DataFrame(olympic_medal_counts)
-values = [4,2,1]
-medals = df[['gold','silver','bronze']]
-points = numpy.dot(medals,values)
-print points
+#Trying to get problem set 2 from Udacity Intro to Data Science done.
+#need to get dataset
+import pandas
+import pandasql
 
 
-olympic_points_df = {'country_name':Series(countries),
-                     'points':Series(points)}
+def max_temp_aggregate_by_fog(filename):
+    '''
+    This function should run a SQL query on a dataframe of
+    weather data.  The SQL query should return two columns and
+    two rows - whether it was foggy or not (0 or 1) and the max
+    maxtempi for that fog value (i.e., the maximum max temperature
+    for both foggy and non-foggy days).  The dataframe will be 
+    titled 'weather_data'. You'll need to provide the SQL query.
+    
+    You might also find that interpreting numbers as integers or floats may not
+    work initially.  In order to get around this issue, it may be useful to cast
+    these numbers as integers.  This can be done by writing cast(column as integer).
+    So for example, if we wanted to cast the maxtempi column as an integer, we would actually
+    write something like where cast(maxtempi as integer) = 76, as opposed to simply 
+    where maxtempi = 76.
+    
+    You can see the weather data that we are passing in below:
+    https://www.dropbox.com/s/7sf0yqc9ykpq3w8/weather_underground.csv
+    '''
+    weather_data = pandas.read_csv(filename)
 
-print avg_medal_count
+    q = """
+    SELECT max(cast(maxtempi as interger))
+    FROM weather_data
+    GROUP BY fog
+    """
+    
+        
+    
+    #Execute your SQL command against the pandas frame
+    foggy_days = pandasql.sqldf(q.lower(), locals())
+    return foggy_days
 
-#
-#
-#def avg_medal_count():
-#    '''
-#    '''    
-#
-#    return avg_medal_count
-#
-#
+max_temp_aggregate_by_fog('weather_underground.csv')
