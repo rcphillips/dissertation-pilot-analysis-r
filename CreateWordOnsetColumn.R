@@ -33,7 +33,7 @@ create_word_onset<-function(subjno){
   ##remove null columns (check that this does not disrupt vectors)
   subjtask<-subset(subjtask[which(subjtask$Probe.ACC!="NULL"),])
   ##create new column for word onsets
-  subjtask$WordOnset<-as.numeric(subjtask$Probe.OnsetTime)+as.numeric(subjtask$ITITime)+1000
+  subjtask$WordOnset<-as.numeric(subjtask$Cue.RTTime)-4515
   ##create new column for SRP rating
   subj_psr_score<-matrix(nrow=length(subjpsr$word), ncol=1)
   for (k in 1:length(subjtask$DisplayStr)){
