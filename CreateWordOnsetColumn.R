@@ -12,19 +12,11 @@
 ###
 #update 160219 Adding in rating as well, and adding it all into the task.csv. No seperate file.
 ###
-<<<<<<< HEAD
-#setwd("C:/Users/rphillips/Desktop/SRP_AX_behav_data")
+setwd("C:/Users/rphillips/Desktop/complete_csvs/complete_csvs")
 #define function:
-subjno<-38
-#just for testing
-setwd("C:/Users/rphillips/PycharmProjects/convert_eprime") #now works directly with pycharm
-subjtask<-read.csv('srp05_task_test.csv',stringsAsFactors=FALSE)
-setwd("C:/Users/rphillips/Desktop/SRP_AX_behav_data")
-subjpsr<-read.csv('subj38_pss.csv',stringsAsFactors=FALSE)
-=======
-
+subjno<-'07'
+#setwd("C:/Users/rphillips/PycharmProjects/convert_eprime") #now works directly with pycharm
 #define function:
->>>>>>> 8196892299d038d0a57394bc14488953fa85be90
 create_word_onset<-function(subjno){
   ##load csv
   subjtask_name<-c(paste('srp_',subjno,'_task.csv', sep=''))
@@ -40,11 +32,7 @@ create_word_onset<-function(subjno){
   ##remove null columns (check that this does not disrupt vectors)
   subjtask<-subset(subjtask[which(subjtask$Probe.ACC!="NULL"),])
   ##create new column for word onsets
-<<<<<<< HEAD
   subjtask$WordOnset<-as.numeric(subjtask$Cue.RTTime)-4515
-=======
-  subjtask$WordOnset<-as.numeric(subjtask$Cue.OnsetTime)-4515
->>>>>>> 8196892299d038d0a57394bc14488953fa85be90
   ##create new column for SRP rating
   subj_psr_score<-matrix(nrow=length(subjpsr$word), ncol=1)
   for (k in 1:length(subjtask$DisplayStr)){
