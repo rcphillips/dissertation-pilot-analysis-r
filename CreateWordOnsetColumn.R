@@ -12,12 +12,13 @@
 ###
 #update 160219 Adding in rating as well, and adding it all into the task.csv. No seperate file.
 ###
-setwd("C:/Users/rphillips/Desktop/SRP_AX_behav_data")
+#setwd("C:/Users/rphillips/Desktop/SRP_AX_behav_data")
+setwd("E:/Box Sync/Box Sync/Proj_SRPAX/complete_csvs") #boxsync at home comp
 #define function:
-subjno<-10
+subjno<-'01'
 create_word_onset<-function(subjno){
   ##load csv
-  subjtask_name<-c(paste('srp_',subjno,'.csv', sep=''))
+  subjtask_name<-c(paste('srp_',subjno,'_task.csv', sep=''))
   subjtask<-read.csv(subjtask_name,stringsAsFactors=FALSE)
   subjpsr_name<-c(paste('srp_',subjno,'_psr.csv', sep=''))
   subjpsr<-read.csv(subjpsr_name,stringsAsFactors=FALSE)
@@ -45,10 +46,10 @@ create_word_onset<-function(subjno){
   #bind the new columns to the subjtask
   subjtask$SRP_Rating<-srplabel
   ##save out csv
-  write.csv(subjtask, file = c(paste('srp_',subjno,'test.csv', sep='')), row.names=FALSE, quote=FALSE)
+  write.csv(subjtask, file = c(paste('srp_',subjno,'_all.csv', sep='')), row.names=FALSE, quote=FALSE)
 
 }
 
-for(i in 1:30){
+for(i in c("01","02","03","04","05","06","07","08","09",10:19)){
   create_word_onset(i)
 }
