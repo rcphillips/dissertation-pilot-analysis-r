@@ -12,24 +12,34 @@
 ###
 #update 160219 Adding in rating as well, and adding it all into the task.csv. No seperate file.
 ###
+<<<<<<< HEAD
 #setwd("C:/Users/rphillips/Desktop/SRP_AX_behav_data")
 setwd("E:/Box Sync/Box Sync/Proj_SRPAX/complete_csvs") #boxsync at home comp
 #define function:
 subjno<-'01'
+=======
+setwd("C:/Users/rphillips/Desktop/complete_csvs/complete_csvs")
+#define function:
+subjno<-'07'
+#setwd("C:/Users/rphillips/PycharmProjects/convert_eprime") #now works directly with pycharm
+#define function:
+>>>>>>> a06dfb2720fea777bf14d9d0ef767762a490ed84
 create_word_onset<-function(subjno){
   ##load csv
   subjtask_name<-c(paste('srp_',subjno,'_task.csv', sep=''))
   subjtask<-read.csv(subjtask_name,stringsAsFactors=FALSE)
   subjpsr_name<-c(paste('srp_',subjno,'_psr.csv', sep=''))
   subjpsr<-read.csv(subjpsr_name,stringsAsFactors=FALSE)
-  subjpsr<-subset(subjpsr, select = c(Subject, Block, Word, WordPresentation.RESP,WordPresentation.RT))
+  subjpsr<-subset(subjpsr, select = c(Subject, Word, WordPresentation.RESP,WordPresentation.RT))
   #remove null columns (check that this does not disrupt vectors)
   subjpsr<-subset(subjpsr[
     which(subjpsr$Word!=""),])
+  subjpsr<-subset(subjpsr[
+    which(subjpsr$Word!="NULL"),])
   ##remove null columns (check that this does not disrupt vectors)
   subjtask<-subset(subjtask[which(subjtask$Probe.ACC!="NULL"),])
   ##create new column for word onsets
-  subjtask$WordOnset<-as.numeric(subjtask$Probe.OnsetTime)+as.numeric(subjtask$ITITime)+1000
+  subjtask$WordOnset<-as.numeric(subjtask$Cue.RTTime)-4515
   ##create new column for SRP rating
   subj_psr_score<-matrix(nrow=length(subjpsr$word), ncol=1)
   for (k in 1:length(subjtask$DisplayStr)){
@@ -47,9 +57,15 @@ create_word_onset<-function(subjno){
   subjtask$SRP_Rating<-srplabel
   ##save out csv
   write.csv(subjtask, file = c(paste('srp_',subjno,'_all.csv', sep='')), row.names=FALSE, quote=FALSE)
+<<<<<<< HEAD
 
 }
 
 for(i in c("01","02","03","04","05","06","07","08","09",10:19)){
   create_word_onset(i)
 }
+=======
+}
+
+for(i in c(20:26,29:33)){create_word_onset(i)}
+>>>>>>> a06dfb2720fea777bf14d9d0ef767762a490ed84
