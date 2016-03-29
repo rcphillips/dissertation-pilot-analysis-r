@@ -18,7 +18,10 @@
 #repeat for all subjects
 ###
 ###housekeeping
-setwd("C:/Users/ryphil/Desktop/complete_csvs")
+#at home comp
+#setwd("C:/Users/ryphil/Desktop/complete_csvs")
+#at IRC comp
+setwd("C:/Users/rphillips/Desktop/complete_csvs/complete_csvs")
 ###
 #subjlist
 #(i in c('01','02','03','04','05','06','07','08','09',10:15,17:24,26,29:33))
@@ -76,7 +79,28 @@ for (i in c('01','02','03','04','05','06','07','08','09',10:15,17:24,26,29:33)){
   allsubj_lowCueRT<-c(allsubj_lowCueRT,subj_lowCueRT)
   
   #fix these ugly plots, but you can see the tail
-  plot(density(as.numeric(allsubj_highCueRT)))
-  plot(density(as.numeric(allsubj_lowCueRT)))
+  #plot(density(as.numeric(allsubj_highCueRT)))
+  #plot(density(as.numeric(allsubj_lowCueRT)))
   
 }
+
+plotdata<-data.frame("times"<-c(as.numeric(allsubj_highCueRT),
+                              as.numeric(allsubj_lowCueRT)),
+                     "label"<-c(rep("high",length(as.numeric(allsubj_highCueRT))),rep("low",length(as.numeric(allsubj_highCueRT))))
+                     )
+colnames(plotdata)<-c("times","label")
+
+library(ggplot2)
+plot_title<-paste("AX cue RT with median PSR split", ' ')
+ggplot(plotdata, aes(x=times)) + 
+  geom_density(fill="white", colour="black", binwidth=30) +
+  xlim(-1,2000) +
+  xlab("AX Probe RT")+
+  ylim(-.001,.0035) +
+  ylab("Probability Density")+
+  ggtitle(plot_title) +
+  theme(strip.text.y=element_text(size=30), axis.title=element_text(size=30), 
+        plot.title=element_text(size=30)) +
+  facet_grid(label ~ .)
+
+
