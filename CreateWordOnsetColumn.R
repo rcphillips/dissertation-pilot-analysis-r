@@ -12,11 +12,17 @@
 ###
 #update 160219 Adding in rating as well, and adding it all into the task.csv. No seperate file.
 ###
-setwd("C:/Users/rphillips/Desktop/complete_csvs/complete_csvs")
+#setwd("C:/Users/rphillips/Desktop/SRP_AX_behav_data")
+setwd("E:/Box Sync/Box Sync/Proj_SRPAX/complete_csvs") #boxsync at home comp
+#define function:
+subjno<-'01'
+
+#setwd("C:/Users/rphillips/Desktop/complete_csvs/complete_csvs")
 #define function:
 subjno<-'07'
 #setwd("C:/Users/rphillips/PycharmProjects/convert_eprime") #now works directly with pycharm
 #define function:
+
 create_word_onset<-function(subjno){
   ##load csv
   subjtask_name<-c(paste('srp_',subjno,'_task.csv', sep=''))
