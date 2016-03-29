@@ -55,8 +55,8 @@ split_density_plot<-function(subjno){
   }
   subjtask$srp_rating<-subj_psr_score
   subjtask$srp_class<-subj_psr_score
-  subjtask$srp_class[which(subjtask$srp_rating<5)] = "low"
-  subjtask$srp_class[which(subjtask$srp_rating>=5)] = "high"
+  subjtask$srp_class[which(subjtask$srp_rating<3)] = "low"
+  subjtask$srp_class[which(subjtask$srp_rating>=6)] = "high"
   
   highCueRTs<-subjtask$Cue.RT[which(subjtask$srp_class=="high")]
   lowCueRTs<-subjtask$Cue.RT[which(subjtask$srp_class=="low")]  
@@ -67,9 +67,11 @@ return(result)
 allsubjno<-data.frame(NULL)
 allsubj_highCueRT<-data.frame(NULL)
 allsubj_lowCueRT<-data.frame(NULL)
-for (i in c('01','02','03','04','05','06','07','08','09',10:15,17:24,26,29:33)){
-  #extract
-  subjno <- '02'
+#for (i in c('01','02','03','04','05','06','07','08','09',10:15,17:24,26,29:33)){
+ for (i in c('02','04','07','09',10:13,18,19,22,24,26,29:33)){
+
+#extract
+  subjno <- i
   subj_highCueRT<-split_density_plot(subjno)[,1]
   subj_lowCueRT<-split_density_plot(subjno)[,2]
   
@@ -90,17 +92,33 @@ plotdata<-data.frame("times"<-c(as.numeric(allsubj_highCueRT),
                      )
 colnames(plotdata)<-c("times","label")
 
+
+allsubj_highCueRT<-data.frame(as.numeric(allsubj_highCueRT))
+colnames(allsubj_highCueRT)<-"times"
+allsubj_lowCueRT<-data.frame(as.numeric(allsubj_lowCueRT))
+colnames(allsubj_lowCueRT)<-"times"
+
+
 library(ggplot2)
-plot_title<-paste("AX cue RT with median PSR split", ' ')
-ggplot(plotdata, aes(x=times)) + 
-  geom_density(fill="white", colour="black", binwidth=30) +
+plot_title<-paste("AXCPT Reaction Times")
+plot<-ggplot() + 
   xlim(-1,2000) +
   xlab("AX Probe RT")+
   ylim(-.001,.0035) +
   ylab("Probability Density")+
   ggtitle(plot_title) +
-  theme(strip.text.y=element_text(size=30), axis.title=element_text(size=30), 
-        plot.title=element_text(size=30)) +
-  facet_grid(label ~ .)
+  theme(strip.text.y=element_text(size=20), 
+        axis.title=element_text(size=20), 
+        plot.title=element_text(size=30),
+        axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        legend.key = element_rect(color=NA))
 
-
+plot+
+  geom_density(data=allsubj_lowCueRT,aes(x=times,fill="Low"))+
+  geom_density(alpha=.8,data=allsubj_highCueRT,aes(x=times,fill="High"))+
+  scale_fill_manual(values=c("#F8766D", "#00BCD8"))+
+  guides(color="none",fill=guide_legend(title="SRP Level"))
