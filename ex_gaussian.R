@@ -24,11 +24,12 @@
 ###Housekeeping:
 #IRC
 #setwd("C:/Users/rphillips/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
-setwd("C:/Users/rphillips/Desktop/complete_csvs/complete_csvs")
+#setwd("C:/Users/rphillips/Desktop/complete_csvs/complete_csvs")
 #CNS
 #setwd("~/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
 #home
-#setwd("E:/Box Sync/Box Sync/Proj_SRPAX/Data_SRPAX_pilotsubjs_behavonly")
+
+setwd("E:/Box Sync/Box Sync/Proj_SRPAX/complete_csvs") #boxsync at home comp
 library(ggplot2)
 library(retimes)
 allsubjno<-data.frame(NULL)
@@ -38,7 +39,7 @@ allsubj_high_tau<-data.frame(NULL)
 allsubj_low_tau<-data.frame(NULL)
 ###
 #test case:
-subjno=10
+subjno='04'
 #The function:
 partial_lapses<-function(subjno){
 #Bring in a single subject's RT distribution
@@ -67,8 +68,9 @@ for (k in 1:length(subjtask$DisplayStr)){
 
 subjtask$srp_rating<-subj_psr_score
 subjtask$srp_class<-subj_psr_score
-subjtask$srp_class[which(subjtask$srp_rating<5)] = "low"
-subjtask$srp_class[which(subjtask$srp_rating>=5)] = "high"
+threshold<-median(as.numeric(subjtask$srp_rating, na.rm=TRUE))
+subjtask$srp_class[which(subjtask$srp_rating<threshold)] = "low"
+subjtask$srp_class[which(subjtask$srp_rating>=threshold)] = "high"
 
 #subset out BX and AY trials
 subjtask<-subset(subjtask, subjtask$TrialType=="AX")
@@ -100,7 +102,7 @@ allsubj_high_plapse<-data.frame(NULL)
 allsubj_low_plapse<-data.frame(NULL)
 allsubj_high_tau<-data.frame(NULL)
 allsubj_low_tau<-data.frame(NULL)
-for (i in c('01','02','03','04','05','06','07','08','09',10:15,17:22,24:26,29:33)){
+for (i in c('02','04','07','09',10:13,18,19,22,24,26,29:33)){
 #extract
 subjno <- as.numeric(i)
   subj_high_plapse<-partial_lapses(i)[1]
@@ -129,4 +131,4 @@ plot(ptau$allsubjno,(ptau$allsubj_high_tau-ptau$allsubj_low_tau), pch= 19, col="
 abline(h=0)
 points(ptau$allsubjno,ptau$allsubj_low_tau, pch= 19, col="blue")
 segments(x0=c(ptau$allsubjno),y0=c(ptau$allsubj_low_tau),x1=c(ptau$allsubjno),y1=c(ptau$allsubj_high_tau))
-
+t.test(allsubj_high_tau,allsubj_low_tau)

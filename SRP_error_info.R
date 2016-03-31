@@ -41,6 +41,7 @@ split_density_plot<-function(subjno){
   subjtask<-read.csv(subjtask_name,stringsAsFactors=FALSE)
   #remove null columns
   subjtask<-subset(subjtask[which(subjtask$Probe.ACC!="NULL"),])
+  #subjtask<-subset(subjtask[which(subjtask$TrialType=="AX"),])
   #Remove inaccurate trials from the subjdata. 
   #subjtask<-subset(subjtask, subjtask$Cue.ACC=="1" & subjtask$Probe.ACC=="1")
 
@@ -72,40 +73,77 @@ split_density_plot<-function(subjno){
   lowProbeErrorRate<-(table(subjtask$srp_class,subjtask$Probe.ACC)[2]/
                    (table(subjtask$srp_class,subjtask$Probe.ACC)[2]+
                       table(subjtask$srp_class,subjtask$Probe.ACC)[4]))
-  result<-cbind(highCueRTs,lowCueRTs)
+  #result<-cbind(highCueRTs,lowCueRTs)
   result2<-cbind(highCueErrorRate,lowCueErrorRate,highProbeErrorRate,lowProbeErrorRate)
-return(result,result2)
+return(result2)
 }
 
 allsubjno<-data.frame(NULL)
 allsubj_highCueRT<-data.frame(NULL)
 allsubj_lowCueRT<-data.frame(NULL)
+allsubj_highCueErrorRate<-data.frame(NULL)
+allsubj_lowCueErrorRate<-data.frame(NULL)
+allsubj_highProbeErrorRate<-data.frame(NULL)
+allsubj_lowProbeErrorRate<-data.frame(NULL)
 #for (i in c('01','02','03','04','05','06','07','08','09',10:15,17:24,26,29:33)){
- for (i in c('02','04','07','09',10:13,18,19,22,24,26,29:33)){
+for (i in c('02','04','07','09',10:13,18,19,22,29:33)){
 
 #extract
   subjno <- i
-  subj_highCueRT<-split_density_plot(subjno)[,1]
-  subj_lowCueRT<-split_density_plot(subjno)[,2]
-  subj_highCueErrors<-split_density_plot(subjno)[,3]
-  subj_lowCueErrors<-split_density_plot(subjno)[,4]
-  subj_highProbeErrors<-split_density_plot(subjno)[,5]
-  subj_lowProbeErrors<-split_density_plot(subjno)[,6]
+  #subj_highCueRT<-split_density_plot(subjno)[,1]
+  #subj_lowCueRT<-split_density_plot(subjno)[,2]
+  subj_highCueErrorRate<-split_density_plot(subjno)[,1]
+  subj_lowCueErrorRate<-split_density_plot(subjno)[,2]
+  subj_highProbeErrorRate<-split_density_plot(subjno)[,3]
+  subj_lowProbeErrorRate<-split_density_plot(subjno)[,4]
   
   #link
   allsubjno<-c(allsubjno,subjno)
-  allsubj_highCueRT<-c(allsubj_highCueRT,subj_highCueRT)
-  allsubj_lowCueRT<-c(allsubj_lowCueRT,subj_lowCueRT)
-  allsubj_highCueRT<-c(allsubj_highCueRT,subj_highCueRT)
-  allsubj_lowCueErrors<-c(allsubj_lowCueErrors,subj_lowCueErrors)
-  allsubj_highProbeErrors<-c(allsubj_highCueErrors,subj_highCueErrors)
-  allsubj_lowProbeErrors<-c(allsubj_lowCueErrors,subj_lowCueErrors)
+  #allsubj_highCueRT<-c(allsubj_highCueRT,subj_highCueRT)
+  #allsubj_lowCueRT<-c(allsubj_lowCueRT,subj_lowCueRT)
+  allsubj_highCueErrorRate<-c(allsubj_highCueErrorRate,subj_highCueErrorRate)
+  allsubj_lowCueErrorRate<-c(allsubj_lowCueErrorRate,subj_lowCueErrorRate)
+  allsubj_highProbeErrorRate<-c(allsubj_highProbeErrorRate,subj_highProbeErrorRate)
+  allsubj_lowProbeErrorRate<-c(allsubj_lowProbeErrorRate,subj_lowProbeErrorRate)
   #fix these ugly plots, but you can see the tail
   #plot(density(as.numeric(allsubj_highCueRT)))
   #plot(density(as.numeric(allsubj_lowCueRT)))
   
 }
 
+error_info <-data.frame("subjno"<-as.numeric(allsubjno),
+                        "highCueErrorRate"<-as.numeric(allsubj_highCueErrorRate),
+                        "lowCueErrorRate"<-as.numeric(allsubj_lowCueErrorRate),
+                        "highProbeErrorRate"<-as.numeric(allsubj_highProbeErrorRate),
+                        "lowProbeErrorRate"<-as.numeric(allsubj_lowProbeErrorRate))
+colnames(error_info)<-c("subjno","highCueErrorRate","lowCueErrorRate","highProbeErrorRate","lowProbeErrorRate")
+
+plot<-ggplot(error_info) + 
+  theme(strip.text.y=element_text(size=20), 
+        axis.title=element_text(size=20), 
+        plot.title=element_text(size=30),
+        axis.line = element_line(colour = "black"),
+        panel.grid.major = element_blank(),
+        panel.grid.minor = element_blank(),
+        panel.border = element_blank(),
+        panel.background = element_blank(),
+        legend.key = element_rect(color=NA))
+plot+
+  geom_histogram(data=error_info, bins=20,aes(x=highCueErrorRate, fill="High", color="High"))+
+  geom_histogram(data=error_info, bins=20,position = "identity", aes(x=lowCueErrorRate, fill="Low", color="Low"))
+  
+
+
+t.test(highProbeErrorRate,lowProbeErrorRate,paired = TRUE)
+
+
+plot<-ggplot(error_info)
+plot+
+  geom_histogram(data=error_info, bins=50,aes(x=highProbeErrorRate, fill="High", color="High"))+
+  geom_histogram(data=error_info, bins=50,alpha=.4, aes(x=lowProbeErrorRate, fill="Low", color="Low"))
+
+#for plotting RTs
+################
 plotdata<-data.frame("times"<-c(as.numeric(allsubj_highCueRT),
                               as.numeric(allsubj_lowCueRT)),
                      "label"<-c(rep("high",length(as.numeric(allsubj_highCueRT))),rep("low",length(as.numeric(allsubj_highCueRT))))
