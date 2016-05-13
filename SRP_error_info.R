@@ -77,9 +77,9 @@ split_density_plot<-function(subjno){
   MostDisruptiveWords<-subjtask$DisplayStr[which(subjtask$Cue.RT >1000)]
   MostRelevantWords<-subjtask$DisplayStr[which(subjtask$srp_rating > 6)]
   #result<-cbind(highCueRTs,lowCueRTs)
-  #result2<-cbind(highCueErrorRate,lowCueErrorRate,highProbeErrorRate,lowProbeErrorRate)
-  result3<-cbind(MostDisruptiveWords,MostRelevantWords)
-return(result3)
+  result2<-cbind(highCueErrorRate,lowCueErrorRate,highProbeErrorRate,lowProbeErrorRate)
+  #result3<-cbind(MostDisruptiveWords,MostRelevantWords)
+return(result2)
 }
 
 allsubjno<-data.frame(NULL)
@@ -98,10 +98,10 @@ for (i in c('02','04','07','09',10:13,18,19,22,29:33)){
   subjno <- i
   #subj_highCueRT<-split_density_plot(subjno)[,1]
   #subj_lowCueRT<-split_density_plot(subjno)[,2]
-  #subj_highCueErrorRate<-split_density_plot(subjno)[,1]
-  #subj_lowCueErrorRate<-split_density_plot(subjno)[,2]
-  #subj_highProbeErrorRate<-split_density_plot(subjno)[,3]
-  #subj_lowProbeErrorRate<-split_density_plot(subjno)[,4]
+  subj_highCueErrorRate<-split_density_plot(subjno)[,1]
+  subj_lowCueErrorRate<-split_density_plot(subjno)[,2]
+  subj_highProbeErrorRate<-split_density_plot(subjno)[,3]
+  subj_lowProbeErrorRate<-split_density_plot(subjno)[,4]
   subj_MostDisruptiveWords <-split_density_plot(subjno)[1:5,1]
   subj_MostRelevantWords <-split_density_plot(subjno)[,2]
   subj_MostDisruptiveWords<-data.frame(subj_MostDisruptiveWords)
@@ -111,10 +111,10 @@ for (i in c('02','04','07','09',10:13,18,19,22,29:33)){
   allsubjno<-c(allsubjno,subjno)
   #allsubj_highCueRT<-c(allsubj_highCueRT,subj_highCueRT)
   #allsubj_lowCueRT<-c(allsubj_lowCueRT,subj_lowCueRT)
-  #allsubj_highCueErrorRate<-c(allsubj_highCueErrorRate,subj_highCueErrorRate)
-  #allsubj_lowCueErrorRate<-c(allsubj_lowCueErrorRate,subj_lowCueErrorRate)
-  #allsubj_highProbeErrorRate<-c(allsubj_highProbeErrorRate,subj_highProbeErrorRate)
-  #allsubj_lowProbeErrorRate<-c(allsubj_lowProbeErrorRate,subj_lowProbeErrorRate)
+  allsubj_highCueErrorRate<-c(allsubj_highCueErrorRate,subj_highCueErrorRate)
+  allsubj_lowCueErrorRate<-c(allsubj_lowCueErrorRate,subj_lowCueErrorRate)
+  allsubj_highProbeErrorRate<-c(allsubj_highProbeErrorRate,subj_highProbeErrorRate)
+  allsubj_lowProbeErrorRate<-c(allsubj_lowProbeErrorRate,subj_lowProbeErrorRate)
   allsubj_MostDisruptiveWords <-c(allsubj_MostDisruptiveWords, subj_MostDisruptiveWords)
   allsubj_MostRelevantWords <-c(allsubj_MostRelevantWords,subj_MostRelevantWords)
   
