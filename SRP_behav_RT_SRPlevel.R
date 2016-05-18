@@ -1,4 +1,4 @@
-#SRP_AXCPT Behavior -- RTs
+#SRP_AXCPT Behavior -- RTs broken up by SRP level
 #R.Phillips
 #160505
 #goal is to make a function which extracts AXCPT cue and probe data across subjects
@@ -25,6 +25,8 @@ for (i in c('01','02','03','04','05','06','07','08','09',10:15,17:24,26,29:33)){
   subjdata<-read.csv(subjdata_name,stringsAsFactors=FALSE)
   #remove null columns
   subjdata<-subset(subjdata[which(subjdata$Probe.ACC!="NULL"),])
+  #Just the high SRP trials
+  subjdata<-subset(subjdata[which(subjdata$SRP_Rating==1),])
   #remove incorrect trials
   subjdata<-subset(subjdata[which(subjdata$Probe.ACC==1 & subjdata$Cue.ACC==1),])
   AX_meanRT<-mean(subjdata$Probe.RT[which(subjdata$TrialType=="AX")])
@@ -47,17 +49,24 @@ write.csv(allsubjRTresult,file="Rphillips_SRP_Behavior_RT.csv")
 #plotting:
 
 plot(x=c(rep(1,length(allsubjRTresult$AX_meanRT))),y=allsubjRTresult$AX_meanRT,col="black",
+     #type='n',
      xlim=c(0,4),
      ylim=c(0,1000))
-points(x=c(rep(2,length(allsubjRTresult$BX_meanRT))),y=allsubjRTresult$BX_meanRT, col = "red") #, type='n')
+title(main="lowSRP_ProbeRTs")
+points(x=c(rep(2,length(allsubjRTresult$BX_meanRT))),
+       y=allsubjRTresult$BX_meanRT,
+       #type='n',
+       col = "red")
+#text(x=c(rep(1,length(allsubjRTresult$AX_meanRT))),y=allsubjRTresult$AX_meanRT,
+     #labels = allsubjRTresult$subjno,col="blue",cex=1)
 #text(x=c(rep(2,length(allsubjRTresult$BX_meanRT))),y=allsubjRTresult$BX_meanRT,
-#     labels = allsubjwordresult$word_denied,col="blue",cex=0.8)
+     #labels = allsubjRTresult$subjno,col="blue",cex=1)
 segments(x0=c(rep(1,length(allsubjRTresult$AX_meanRT))),
          y0=allsubjRTresult$AX_meanRT,
          x1=c(rep(2,length(allsubjRTresult$BX_meanRT))),
          y1=c(allsubjRTresult$BX_meanRT))
 points(x=c(rep(3,length(allsubjRTresult$AY_meanRT))),y=allsubjRTresult$AY_meanRT,col="green")
 segments(x0=c(rep(2,length(allsubjRTresult$BX_meanRT))),
-         y0=allsubjRTresult$BX_meanRT,
-         x1=c(rep(3,length(allsubjRTresult$AY_meanRT))),
-         y1=c(allsubjRTresult$AY_meanRT))
+        y0=allsubjRTresult$BX_meanRT,
+        x1=c(rep(3,length(allsubjRTresult$AY_meanRT))),
+        y1=c(allsubjRTresult$AY_meanRT))

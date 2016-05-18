@@ -3,8 +3,11 @@
 #R.Phillips
 #Goal: Get the measure of how often subjects are affirming that the word presented 
 #describes them
+#atIRCcomp
+#setwd("/Users/rcphillips/Box Sync/Proj_SRPAX/complete_csvs")
+#at CNS comp
 setwd("/Users/rcphillips/Box Sync/Proj_SRPAX/complete_csvs")
-allsubjresult<-data.frame(NULL)
+allsubjwordresult<-data.frame(NULL)
 i='02'
 for (i in c('01','02','03','04','05','06','07','08','09',10:15,17:24,26,29:33)){
 subjno=i
@@ -19,9 +22,9 @@ word_denied<-table(word_endorsement,useNA='ifany')[[2]]
 indeterminate<-length(which(word_endorsement!=1 & word_endorsement!=2,))
 no_resp<-sum(is.na(word_endorsement))
 subjresult<-c(as.numeric(subjno),as.numeric(word_affirmed),as.numeric(word_denied),as.numeric(indeterminate),as.numeric(no_resp))
-allsubjresult<-rbind(allsubjresult,subjresult)
+allsubjwordresult<-rbind(allsubjwordresult,subjresult)
 }
-colnames(allsubjresult)<-c('subjno','word_affirmed','word_denied','indeterminate','no_resp')
+colnames(allsubjwordresult)<-c('subjno','word_affirmed','word_denied','indeterminate','no_resp')
 
 setwd('/Users/rcphillips/Desktop')
 write.csv(allsubjresult, file='words_affirmed.csv',row.names=FALSE)
