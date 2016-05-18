@@ -12,7 +12,9 @@
 #at home comp
 #setwd("C:/Users/ryphil/Desktop/complete_csvs")
 #at IRC comp
-setwd("C:/Users/rphillips/Desktop/complete_csvs/complete_csvs")
+#setwd("C:/Users/rphillips/Desktop/complete_csvs/complete_csvs")
+#at CNS comp
+setwd("/Users/rcphillips/Box Sync/Proj_SRPAX/complete_csvs")
 ###
 allsubjresult<-data.frame(NULL)
 #access data
