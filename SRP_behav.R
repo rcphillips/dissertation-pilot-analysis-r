@@ -14,7 +14,9 @@
 #at IRC comp
 #setwd("C:/Users/rphillips/Desktop/complete_csvs/complete_csvs")
 #at CNS comp
-setwd("/Users/rcphillips/Box Sync/Proj_SRPAX/complete_csvs")
+#setwd("/Users/rcphillips/Box Sync/Proj_SRPAX/complete_csvs")
+#at Macbook
+setwd("/Users/rcphillips/Desktop/Dissertation/data/MRI_subj/complete_csvs")
 ###
 allsubjaccresult<-data.frame(NULL)
 #access data
