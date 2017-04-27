@@ -1,0 +1,26 @@
+#getting the subjno in each complete_csv
+setwd("C:/Users/rphillips/Desktop/complete_csvs/complete_csvs")
+
+subjno = '25'
+allsubj_no_label<-data.frame('label',stringsAsFactors=FALSE)
+allsubj_no_baked_in<-data.frame('baked-in',stringsAsFactors=FALSE)
+allsubjdate<-data.frame('date',stringsAsFactors=FALSE)
+
+for (i in c('01','02','03','04','05','06','07','08','09',10:24,26,29:33)){
+
+subjno=i
+subjdata_name<- paste("srp_", subjno, sep="","_all.csv")
+subjdata<-read.csv(subjdata_name,stringsAsFactors=FALSE)
+
+subjdate <-subjdata$SessionStartDateTimeUtc[1]
+allsubjdate<-rbind(allsubjdate,subjdate)
+
+subj_no_baked_in <-as.numeric(subjdata$Subject[1])
+allsubj_no_baked_in<-rbind(allsubj_no_baked_in,subj_no_baked_in)
+
+allsubj_no_label<-rbind(allsubj_no_label,as.numeric(i))
+}
+results<-cbind(allsubj_no_label,allsubj_no_baked_in,allsubjdate)
+results
+
+
